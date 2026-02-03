@@ -14,7 +14,7 @@ layout: default
 
 ## The Problem
 
-LLM-as-a-Judge approaches produce **holistic scores** (e.g., "3 out of 5") that obscure which specific elements influenced the assessment. To understand a rating, practitioners must manually review outputs and map justifications to specific fragments—effort that undermines the automation benefits.
+LLM-as-a-Judge approaches produce **holistic scores** (e.g., "3 out of 5") that obscure which specific elements influenced the assessment. To understand a rating, practitioners must manually review outputs and map justifications to specific fragments.
 
 <span class="sys-name">Evalet</span> addresses this through **functional fragmentation**: automatically dissecting outputs into fragments and interpreting the *function* each serves relative to evaluation criteria.
 
@@ -46,9 +46,8 @@ Clicking <strong>View Details</strong> reveals the full output with <strong>colo
 
 ### Exploring the Landscape of Functions
 
-The **Map Visualization** projects all fragment-level functions into a **2D space** based on their semantic similarity. Functions that serve similar purposes cluster together—even if they use different wording.
+The **Map Visualization** projects all fragment-level functions into a **2D space** based on their semantic similarity. Functions that serve similar purposes are clustered together, even if they differ in wording and content. This allows users to:
 
-Users can:
 - **Drill down** from super clusters → base clusters → individual functions
 - **Compare** how similar functions were rated across different outputs
 - **Identify patterns** in model behavior (e.g., over-reliance on certain strategies)
@@ -61,7 +60,7 @@ Users can:
 
 ### Correcting Evaluations
 
-When users find misaligned evaluations, they can add functions to **example sets** (positive, negative, or excluded) to steer future evaluations. After re-running, the **Show Examples** toggle reveals where examples landed in the new function space—verifying that corrections took effect.
+When users find misaligned evaluations, they can add functions to **example sets** (positive, negative, or excluded) to steer future evaluations. After re-running, the **Show Examples** toggle reveals where examples landed in the new function spac,e allowing users to verify that corrections took effect.
 
 {: .sys-img}
 ![Users can select functions and add them to example sets. After re-evaluation, examples appear as squares in the Map Visualization, showing their effect on nearby functions.](/assets/img/alignment.jpg)
@@ -87,13 +86,13 @@ In a user study (N=10) comparing <span class="sys-name">Evalet</span> against a 
 
 <div class="case-columns">
   <div>
-    <strong>Metacognitive Insight in Reasoning</strong>: Functions reveal behaviors like <em>self-questioning for knowledge gaps</em>, <em>acknowledgment of limitations</em>, and <em>proactive edge case analysis</em>—showing how reasoning models reflect on their own thought processes.
+    <strong>Metacognitive Insight in Reasoning</strong>: Functions reveal behaviors like <em>self-questioning for knowledge gaps</em>, <em>acknowledgment of limitations</em>, and <em>proactive edge case analysis</em>—shows how reasoning models reflect on their own thought processes.
   </div>
   <div>
-    <strong>Harmlessness in Conversations</strong>: Functions span a spectrum from <em>refusals to share harmful information</em> and <em>constructive ethical alternatives</em> to <em>promotion of coercive tactics</em>—enabling practitioners to identify where models fall on the safety spectrum.
+    <strong>Harmlessness in Conversations</strong>: Functions span a spectrum from <em>refusals to share harmful information</em> and <em>constructive ethical alternatives</em> to <em>promotion of coercive tactics</em>—allows practitioners to identify where models fall on the safety spectrum.
   </div>
   <div>
-    <strong>Social Intelligence in Simulations</strong>: Functions capture positive behaviors like <em>rapport building through mirroring</em>, but also negative ones like <em>self-centered interactions</em>—revealing both strengths and weaknesses in social behavior.
+    <strong>Social Intelligence in Simulations</strong>: Functions capture positive behaviors like <em>rapport building through mirroring</em>, but also negative ones like <em>self-centered interactions</em>—reveals both strengths and weaknesses in social behavior.
   </div>
 </div>
 

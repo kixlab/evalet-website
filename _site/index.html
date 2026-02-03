@@ -164,7 +164,7 @@
 
 <h2 id="the-problem">The Problem</h2>
 
-<p>LLM-as-a-Judge approaches produce <strong>holistic scores</strong> (e.g., “3 out of 5”) that obscure which specific elements influenced the assessment. To understand a rating, practitioners must manually review outputs and map justifications to specific fragments—effort that undermines the automation benefits.</p>
+<p>LLM-as-a-Judge approaches produce <strong>holistic scores</strong> (e.g., “3 out of 5”) that obscure which specific elements influenced the assessment. To understand a rating, practitioners must manually review outputs and map justifications to specific fragments.</p>
 
 <p><span class="sys-name">Evalet</span> addresses this through <strong>functional fragmentation</strong>: automatically dissecting outputs into fragments and interpreting the <em>function</em> each serves relative to evaluation criteria.</p>
 
@@ -196,9 +196,8 @@ Clicking <strong>View Details</strong> reveals the full output with <strong>colo
 
 <h3 id="exploring-the-landscape-of-functions">Exploring the Landscape of Functions</h3>
 
-<p>The <strong>Map Visualization</strong> projects all fragment-level functions into a <strong>2D space</strong> based on their semantic similarity. Functions that serve similar purposes cluster together—even if they use different wording.</p>
+<p>The <strong>Map Visualization</strong> projects all fragment-level functions into a <strong>2D space</strong> based on their semantic similarity. Functions that serve similar purposes are clustered together, even if they differ in wording and content. This allows users to:</p>
 
-<p>Users can:</p>
 <ul>
   <li><strong>Drill down</strong> from super clusters → base clusters → individual functions</li>
   <li><strong>Compare</strong> how similar functions were rated across different outputs</li>
@@ -213,7 +212,7 @@ Clicking <strong>View Details</strong> reveals the full output with <strong>colo
 
 <h3 id="correcting-evaluations">Correcting Evaluations</h3>
 
-<p>When users find misaligned evaluations, they can add functions to <strong>example sets</strong> (positive, negative, or excluded) to steer future evaluations. After re-running, the <strong>Show Examples</strong> toggle reveals where examples landed in the new function space—verifying that corrections took effect.</p>
+<p>When users find misaligned evaluations, they can add functions to <strong>example sets</strong> (positive, negative, or excluded) to steer future evaluations. After re-running, the <strong>Show Examples</strong> toggle reveals where examples landed in the new function spac,e allowing users to verify that corrections took effect.</p>
 
 <p class="sys-img"><img src="/assets/img/alignment.jpg" alt="Users can select functions and add them to example sets. After re-evaluation, examples appear as squares in the Map Visualization, showing their effect on nearby functions." /></p>
 
@@ -238,13 +237,13 @@ Clicking <strong>View Details</strong> reveals the full output with <strong>colo
 
 <div class="case-columns">
   <div>
-    <strong>Metacognitive Insight in Reasoning</strong>: Functions reveal behaviors like <em>self-questioning for knowledge gaps</em>, <em>acknowledgment of limitations</em>, and <em>proactive edge case analysis</em>—showing how reasoning models reflect on their own thought processes.
+    <strong>Metacognitive Insight in Reasoning</strong>: Functions reveal behaviors like <em>self-questioning for knowledge gaps</em>, <em>acknowledgment of limitations</em>, and <em>proactive edge case analysis</em>—shows how reasoning models reflect on their own thought processes.
   </div>
   <div>
-    <strong>Harmlessness in Conversations</strong>: Functions span a spectrum from <em>refusals to share harmful information</em> and <em>constructive ethical alternatives</em> to <em>promotion of coercive tactics</em>—enabling practitioners to identify where models fall on the safety spectrum.
+    <strong>Harmlessness in Conversations</strong>: Functions span a spectrum from <em>refusals to share harmful information</em> and <em>constructive ethical alternatives</em> to <em>promotion of coercive tactics</em>—allows practitioners to identify where models fall on the safety spectrum.
   </div>
   <div>
-    <strong>Social Intelligence in Simulations</strong>: Functions capture positive behaviors like <em>rapport building through mirroring</em>, but also negative ones like <em>self-centered interactions</em>—revealing both strengths and weaknesses in social behavior.
+    <strong>Social Intelligence in Simulations</strong>: Functions capture positive behaviors like <em>rapport building through mirroring</em>, but also negative ones like <em>self-centered interactions</em>—reveals both strengths and weaknesses in social behavior.
   </div>
 </div>
 
