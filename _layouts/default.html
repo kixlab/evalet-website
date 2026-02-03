@@ -83,6 +83,14 @@
         </span>
         {% endif %}
       </div>
+      {% if site.venue %}
+      <p class="venue">
+        {% if site.venue_message %}
+        <span class="venue-message">{{ site.venue_message }}</span>
+        {% endif %}
+        {{ site.venue }}
+      </p>
+      {% endif %}
     </div>
     <div class="wrapper">
       <hr/>
