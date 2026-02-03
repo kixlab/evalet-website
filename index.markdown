@@ -100,7 +100,7 @@ In a user study (N=10) comparing <span class="sys-name">Evalet</span> against a 
 
 ## Bibtex
 <pre>
-@article{kim2025evaletevaluatinglargelanguage,
+@article{kim2025evalet,
   title={Evalet: Evaluating Large Language Models by Fragmenting Outputs into Functions},
   author={Tae Soo Kim and Heechan Lee and Yoonjoo Lee and Joseph Seering and Juho Kim},
   year={2025},
@@ -116,6 +116,9 @@ In a user study (N=10) comparing <span class="sys-name">Evalet</span> against a 
 {: .logos}
 [![Logo of KIXLAB](/assets/img/kixlab_logo.png)](https://kixlab.org)
 [![Logo of KAIST](/assets/img/kaist_logo.png)](https://kaist.ac.kr)
+[![Logo of CSTL](/assets/img/cstl_logo.png)](https://cstlab.org/)
+[![Logo of University of Michigan](/assets/img/umich_logo.png)](https://umich.edu)
+[![Logo of SkillBench](/assets/img/skillbench_logo.svg)](https://skillbench.com)
 
 {: .center .acknowledgement}
 This work was supported by the National Research Foundation of Korea (NRF) grant funded by the Korea government (Ministry of Science and ICT) (No.RS-2025-00557726). This work was also supported by Institute of Information & Communications Technology Planning & Evaluation (IITP) grant funded by the Korea government (MSIT) (No. RS-2024-00443251, Accurate and Safe Multimodal, Multilingual Personalized AI Tutors).
