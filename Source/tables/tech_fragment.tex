@@ -1,0 +1,13 @@
+\begin{table}[t!]
+\centering
+\begin{tabular}{@{}lcccc@{}}
+\toprule
+\textbf{Method}       & \textbf{IoU}   & \textbf{Precision} & \textbf{Recall} & \textbf{F1}    \\ \midrule
+\textbf{\texttt{Ours}}  & \textbf{0.543} & 0.607     & \textbf{0.902}  & \textbf{0.726} \\
+\textbf{\texttt{Rating}} & 0.414          & \textbf{0.615}              & 0.843           & 0.711          \\ \bottomrule
+\end{tabular}%
+\caption{Performance of the tested methods in fragment extraction as measured by the Intersection-over-Union (IoU) of predicted and ground-truth fragments, and precision, recall, and F1-score of the predicted fragments.}
+\Description{This table compares the performance of two methods, Ours and Rating, in fragment extraction. It reports four metrics: Intersection-over-Union (IoU), Precision, Recall, and F1-score.
+Our method achieves higher IoU (0.543 vs. 0.414) and Recall (0.902 vs. 0.843), while Rating method shows slightly higher Precision (0.615 vs. 0.607). Overall, our approach obtains the best F1-score of 0.726 compared to 0.711 for the baseline.}
+\label{tab:tech_fragment}
+\end{table}

@@ -2,18 +2,20 @@
   affiliation: KAIST
   website: https://taesookim.com
   img: taesoo.jpeg
-- name: Yoonjoo Lee
+  equal: true
+- name: Heechan Lee
   affiliation: KAIST
+  website: https://heechanlee.com/
+  img: heechan.jpeg
+  equal: true
+- name: Yoonjoo Lee
+  affiliation: University of Michigan
   website: https://yoonjoolee.com
   img: yoonjoo.jpeg
-- name: Jamin Shin
-  affiliation: NAVER AI Lab
-  website: https://www.jayshin.xyz/
-  img: jamin.jpg
-- name: Young-Ho Kim
-  affiliation: NAVER AI Lab
-  website: http://younghokim.net/
-  img: youngho.jpg
+- name: Joseph Seering
+  affiliation: KAIST
+  website: https://joseph.seering.org/
+  img: joseph.jpg
 - name: Juho Kim
   affiliation: KAIST
   website: https://juhokim.com

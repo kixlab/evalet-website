@@ -1,0 +1,183 @@
+\appendix
+
+\begin{figure}
+    \centering
+    \includegraphics[width=1.0\columnwidth]{figures/system_filter}
+    \caption{In the Database Tab, users can browse through the list of base clusters for fragment-level functions from each output. By clicking on a cluster, users can view all outputs that contain any functions that are included in the selected cluster. Additionally, \sysname{} provides statistics summarizing the evaluation results for these outputs and clusters that contain functions that co-occur frequently with functions in the selected cluster.}
+    \label{fig:system_filter}
+    \Description{This figure shows how users can inspect outputs that include selected clusters in the Database Tab. The top section presents the selected clusters with summary statistics, such as the number of matching outputs and average scores. Below, commonly co-occurring clusters are shown for additional context. The bottom section displays outputs with its input, model response, and function-level evaluations, highlighting how the selected clusters appear within the output.}
+\end{figure}
+
+\section{LLM Prompts}
+\label{appendix:prompts}
+
+Here, we present the various LLM prompts that power \sysname{}: functional fragmentation and evaluation prompt (Fig.~\ref{fig:evaluation_prompt1}, ~\ref{fig:evaluation_prompt2}), base cluster creation prompt (Fig.~\ref{fig:base_cluster_prompt}), super cluster creation prompt (Fig.~\ref{fig:super_cluster_prompt}), super cluster deduplication prompt (Fig.~\ref{fig:super_cluster_deduplication_prompt}), and prompt to reassign base clusters to super clusters (Fig.~\ref{fig:super_cluster_reassignment_prompt}). 
+
+\section{Technical Evaluation Details}
+
+In our technical evaluation, we compared our functional fragmentation approach against a baseline that provided evaluations at the output-level. We compared the two approaches in two tasks: fragment extraction and overall assessment.
+
+\subsection{Fragment Extraction}
+\label{appendix:tech_eval_extract}
+
+\subsubsection{Dataset}
+
+For the technical evaluation of fragment extraction, we used the Scarecrow dataset~\cite{wu2023fine}, which contains LLM-generated passages where human annotators annotated errors according to given categories.
+As each data point in the dataset includes annotations from 10 annotators with varying granularities (e.g., word, phrase, sentence), we aggregate the annotations by selecting sentences where the majority of annotators agreed on a specific error type.
+Then, we filter the data to only points with at least 3 annotations that were agreed on by the majority of annotators, which yielded 402 data points.
+
+In this task, each data point could include different types of errors. For each data point, we assessed it only on the criteria that were related to the errors that were actually annotated for that data point. Specifically, we used the following criteria to encompass the error types in the dataset:
+\begin{itemize}
+    \item \textbf{\criterion{Language Quality}}: \textit{"This criterion captures a broad range of textual problems that degrade the clarity, correctness, or relevance of a passage. Issues with 'Language Quality' may include incorrect or awkward grammar and usage (e.g., missing, extra, or out-of-order words), irrelevance or contradiction with the given prompt ('off-prompt'), excessive or repetitive phrasing ('redundant'), internally conflicting statements ('self-contradiction'), or any general lack of clarity rendering the text confusing ('incoherent'). Any error that hinders readers’ understanding or undermines the text’s fidelity to the prompt falls under this umbrella."} (Covers the error types: "Grammar and Usage", "Off-prompt", "Redundant", "Self-Contradiction", and "Incoherent")
+    \item \textbf{\criterion{Factual Accuracy}}: \textit{"This criterion encompasses all errors that compromise the factual correctness of a passage. Issues with 'Factual Accuracy' include mathematical or numerical mistakes ('bad math'), incorrect factual assertions contrary to well-known information ('encyclopedic' errors), and any statements that violate fundamental common sense ('commonsense' errors). Any generation that misrepresents or distorts verifiable information, basic knowledge, or logical reasoning falls into this category."} (Covers the error types: "Bad Math, "Commonsense", and "Encyclopedic")
+    \item \textbf{\criterion{Reader Accessibility}}: \textit{"This criterion covers situations where the content demands more effort than usual for the average reader to comprehend or verify. Issues with 'Reader Accessibility' may arise if the text includes claims that require external verification ("needs Google") or relies on technical or domain-specific vocabulary beyond common knowledge ('technical jargon'). While these issues do not necessarily render the text incorrect, they make the content harder to assess or understand without additional expertise or resources."} (Covers the error types: "Needs Google" and "Technical Jargon")
+\end{itemize}
+
+\subsubsection{Measures}
+
+We compute the Intersection-over-Union (IoU) between extracted fragments and the ground-truth annotations.
+For each error type or criterion, we calculate the number of tokens shared by both the extracted fragments and the ground-truth annotations (i.e., intersection) and divide that by the number of tokens that appear in either set (i.e., union).
+We also evaluate extraction performance using precision, recall, and F1-score at the sentence level. 
+For each approach, we identify all sentences containing extracted fragments and all sentences containing ground-truth fragments, and then count matches between these sentences as correct predictions.
+We opted for sentence-level matching due to the granularity differences between the fragments from each approach and the ground-truth annotations.
+
+\subsection{Overall Assessment}
+\label{appendix:tech_eval_overall}
+
+\subsubsection{Dataset}
+
+We use the RewardBench dataset~\cite{lambert2024rewardbench}, which contains input prompts and two responses generated by different LLMs, where one response was \textit{chosen} (i.e., preferred by a majority of human annotators) and the other was \textit{rejected}.
+The dataset is a collection of multiple different datasets and the data points are assigned to different subsets depending on their category: Chat, Chat Hard, Safety, and Reasoning.
+In our experiments, we exclude the Reasoning subset as it encompasses almost as much data as all of the subsets combined, but focuses solely on math and coding-related prompts.
+As our method focuses on the evaluation of long-form text with multiple text fragments, we filtered the dataset to only cases where both responses were at least 100 words in length (i.e., one paragraph or longer)---yielding 432 data points.
+
+For the overall assessment task, we used \textbf{\criterion{Human Preference}} as the criterion: \textit{"Does the response align closely with human judgment and preferences, reflecting the naturalness, usefulness, and appropriateness that will be valued by the user? This includes considering user satisfaction, appropriateness of tone, style, and context- specific nuances that resonate positively with human evaluators."}
+
+\subsubsection{Measures}
+
+We used each approach to independently evaluate each response in a pair and then compared the evaluation scores for each response to determine the predicted \textit{chosen} response.
+Specifically, for \texttt{Ours}, the score for each response was the ratio of positively rated functions out of all extracted functions. 
+For \texttt{Rating}, we used the rating (1 to 5) given to each response.
+Then, we calculated the \textit{accuracy} of each approach in correctly determining the \textit{chosen response}---where ties are considered as incorrect.
+
+
+\section{Study Datasets}
+\label{appendix:study_datasets}
+
+\paragraph{Task Dataset Construction Process} In our study, participants explored the outputs and evaluations for two different long-form generation tasks: (1) short horror story generation, and (2) social media advertisement post generation.
+For each task, we created an initial dataset of 100 inputs: (1) three keywords for the horror story task (e.g., "closet, eyes, sigh"), and (2) short phrases that describe a product for the advertisement task (e.g., "posture correcting smart backpack").
+To create these datasets, we started with 5 manually crafted examples. Then, given these examples, we used \texttt{gpt-4o-2024-11-20} to gradually synthesize more data in steps: generate 10 more data points, manually verify these data points, filter out low-quality ones, and then repeat by using all of the created data as examples.
+
+\paragraph{Task Criteria}
+These tasks were evaluated in the following criteria (translated from Korean):
+\begin{itemize}
+    \item Horror Stories - \textbf{\criterion{Horror Atmosphere}}: \textit{"This criterion assesses how effectively the story creates immersive and constant fear or psychological anxiety. This criterion should evaluate a story positively if it: (1) creates fear through implicit suggestions instead of explicit explanations; (2) includes "Aha!" moments that lead readers to reconsider previous occurrences in the story; or (3) reveals new scary elements when re-reading the story. A story is evaluated negatively if: (1) the story relies on traditional or cliché elements; (2) scary elements are not implied but instead explicitly explained; or (3) there are no moments that turn the story into a scary or fearful mood."}
+    \item Advertisements - \textbf{\criterion{Emotional Effect}}: \textit{"This criterion assesses how effectively the advertisement elicits a meaningful and authentic emotional response from readers. In particular, it focuses on whether the advertisement can naturally stimulate emotions within the hearts of consumers (e.g., joy, nostalgia, inspiration, empathy, excitement, and warmth). The advertisement should not convey emotions in an artificial or forced way, and should elicit empathy without exaggerations. Good advertisements should naturally connect emotional experiences with brands or products to increase consumer trust, strengthen connections, and make a strong enough impression that prompts the consumer to act on these feelings."}
+\end{itemize}
+
+During the study, participants were asked to select a new criterion for one of the tasks and to run new evaluations. These were the list of criteria that were provided to participants for each task:
+
+\begin{itemize}
+    \item Horror Stories
+    \begin{itemize}
+        \item \textbf{\criterion{Psychological Depth}}: \textit{"This criterion evaluates how realistically the story portrays the internal psychology and emotions of characters. This criterion should evaluate a story positively if: (1) characters' emotions are convincingly depicted, or (2) readers can empathize with characters' inner conflict and anxiety. A story should be evaluated negatively if: (1) characters' emotions are superficial or simplistic, or (2) characters' responses are unrealistic or contrived."}
+        \item \textbf{\criterion{Creative Originality}}: \textit{"This criterion evaluates how the story presents horror elements in a fresh and unique manner. This criterion should evaluate a story positively if: (1) presents common horror elements but with unexpected perspectives or situations, or (2) the source of horror avoids common clichés and is realized through unique ideas. A story is evaluated negatively if: (1) relies on common clichés, or (2) directly replicate approaches commonly used in prior famous stories."}
+        \item \textbf{\criterion{Keyword Integration}}: \textit{"This criterion evaluates how naturally and creatively the keywords are integrated in the story. This criterion should evaluate a story positively if: (1) keywords naturally link with the horror atmosphere, (2) keywords play a crucial role in generating horror, or (3) keywords provide significant clues that help readers uncover hidden meanings or plot twists. A story is evaluated negatively if: (1) keywords feel artificially inserted and are unrelated to the story's flow, (2) keywords do not meaningfully contribute to horror or plot progression, or (3) removing keywords would not significantly impact the horror of the story."}
+    \end{itemize}
+    \item Advertisements
+    \begin{itemize}
+        \item \textbf{\criterion{Creativity and Originality}}: \textit{"This criterion evaluates how effectively an advertisement captures reader's attention through creative and unique ideas. Advertisements must avoid mundane or predictable content, leaving a lasting impression through fresh perspectives or innovative expressions. The advertisement should distinguish itself from existing ads through memorable elements (e.g., original concepts, creative storytelling, or unexpected components)."}
+        \item \textbf{\criterion{Brand Consistency and Message Clarity}}: \textit{"This criterion assesses how consistently the ad reflects a brand or image. Ads must be consistent in the tone, style, and content---conveying a clear and understandable message. The ad should focus on clear key aspects to allow consumers to effortlessly associate the ad with a brand without causing confusion or misunderstandings."}
+        \item \textbf{\criterion{Call-to-Action Effectiveness}}: \textit{"This criterion evaluates how effectively the advertisement persuades consumers to actively engage with the product. Effective ads should not only attract attention or generate interest, but also lead to specific actions like purchases, website visits, product usage, or social media shares. Calls-to-action should organically motivate consumer behavior, providing incentives that are attractive and appear easily obtainable."}
+    \end{itemize}
+\end{itemize}
+
+\paragraph{Pre-Identified Evaluation Issues for Each Task}
+\label{appendix:study_evaluation_issues}
+In the user study, for each task, participants were asked to correct the LLM evaluations based on two pre-identified issues with the evaluation results.
+The issues were provided to participants in Korean during the study.
+\begin{itemize}
+    \item Horror Stories
+    \begin{itemize}
+        \item \textbf{Positive to Negative} - The LLM evaluator is currently providing positive evaluations to outputs that contain phrases that explicitly describe the fear experienced by the protagonist or a character. These case should be evaluated as negative.
+        \item \textbf{Excluded} - The LLM evaluator is currently evaluating phrases that are ambiguous or vague for the "Horror Atmosphere" criterion (e.g., \textit{"something was watching me from the darkness"}). These should be assessed by a different criterion so they should be excluded.
+    \end{itemize}
+    \item Advertisements
+    \begin{itemize}
+        \item \textbf{Negative to Positive} - The LLM evaluator is currently providing negative evaluations to outputs that contain phrases that encourage a certain emotion or behavior from the consumer. These cases should be evaluated as positive.
+        \item \textbf{Excluded} - The LLM evaluator is currently evaluating phrases that emphasize eco-friendliness for the "Emotional Effect" criterion (e.g., \textit{"your small choices can save the Earth"}. These should be assessed by a different criterion so they should be excluded.
+    \end{itemize}
+\end{itemize}
+
+\section{Study Metrics}
+\label{appendix:study_metrics}
+
+\paragraph{Survey Questions}
+In our post-task survey, participants were asked to rate their agreement with the following statements on a 7-point Likert scale (1 - "Strongly Disagree", 7 - "Strongly Agree"):
+\begin{itemize}
+    \item "I was able to identify critical or important issues with the model outputs."
+    \item "I was able to identify critical or important issues with the model evaluations."
+    \item "I am confident that I identified most issues with the model outputs."
+    \item "I am confident that I identified most issues with the model evaluations."
+    \item "I am confident that I can act on and resolve the issues that I identified with the model outputs."
+    \item "I am confident that I can act on and resolve the issues that I identified with the model evaluations."
+\end{itemize}
+
+\paragraph{Calculating Success Rate for Correcting Evaluation Issues}
+In the user study, participants refined evaluation criteria by adding few-shot examples and modifying descriptions to address the given LLM evaluation issues (Appendix~\ref{appendix:study_evaluation_issues}). 
+To verify the effectiveness of these refinements, we created a test set containing outputs known to exhibit these issues under the original criteria.
+Using the original method to create the datasets for our study, we generated an additional 100 data points per task, which were evaluated using the original criteria.
+An author reviewed these evaluations to identify two common issues per task and selected five outputs per issue that demonstrated that issue. 
+Specifically, each output contained an \textit{issue fragment}---i.e., a fragment that required an opposite rating (i.e., "positive to negative" or "negative to positive" issue type) or should have not been extracted (i.e., "excluded" issue type).
+
+Participants' refined criteria were then applied to re-evaluate these test outputs, enabling us to measure their success rate in correcting evaluation issues.
+We used the original evaluation prompt and evaluator LLM.
+Due to evaluation inconsistencies even at temperature 0, each output was evaluated three times per participant.
+We first identified if any of the newly extracted fragments matched the issue fragments by calculating their token-level IoU and considering a match if IoU was greater than 0.5.
+Then, the evaluation issue was considered corrected as follows depending on the issue type: (1) \textbf{\textit{"Positive to Negative"} or \textit{"Negative to Positive"}} - Issue was corrected if there is a matching fragment and it received a rating opposite to the original rating; or (2) \textbf{\textit{Excluded}} - Issue was corrected if no matching fragment was extracted.
+Each participant's success rate was computed per task based on the percentage of corrected cases out of the 30 evaluations (2 issues $\times$ 5 outputs per issue $\times$ 3 evaluations each).
+
+\section{Example Cases Details}
+\label{appendix:example_cases}
+
+In our example cases (Sec.~\ref{sec:example_cases}), we test our \approach{} approach on (1) reasoning traces, (2) user-LLM conversations, (3) social agent simulations and (4) trajectories of computer use agents. Here, we provide additional details on the data used.
+
+\subsection{Reasoning Traces}
+
+We collect reasoning traces from the OpenThoughts dataset~\cite{openthoughts}, which contains the reasoning traces generated by DeepSeek-R1~\cite{guo2025deepseek} on various problems.
+Specifically, the datasets consists of 6 task domains and we sampled 35 data points per domain, yielding a total of 210 data points.
+We evaluated these on \criterion{Metacognitive Insight}: \textit{"Metacognitive Insight evaluates the degree to which the assistant actively reflects upon, regulate, and articulate their thought processes during reasoning. It assesses its capability to recognize assumptions, identify potential errors, reconsider decisions, adaptively guide their cognitive strategies, and more metacognitive abilities. High levels of Metacognitive Insight indicate advanced self-awareness and a proactive approach to managing its own cognitive activities."}
+
+\subsection{User-LLM Conversations}
+
+We applied our approach on the HarmfulQA dataset~\cite{bhardwaj2023redteaming}, which consists of questions designed to elicit harmful responses from LLMs (i.e., red teaming), along with corresponding harmless and harmful model responses.
+We randomly sampled 200 data points and evaluated them for \criterion{Harmlessness}: \textit{"Harmlessness assesses the extent to which an assistant engages with users safely and respectfully during interactions. It evaluates whether the assistant’s responses consistently avoid causing harm or negative consequences, including emotional distress, misunderstandings, biases, offensive or inappropriate content, misinformation, and more. This criterion assesses the assistant’s overall ability to engage positively and respectfully, maintaining user trust and well-being throughout the interaction."}
+
+\subsection{Social Agents}
+We applied our approach on a dataset generated through the SOTOPIA environment~\cite{wang2024sotopia}. Each data point includes a dialogue that simulates negotiations between two LLM agents that are role-playing as characters with different social goals.
+We randomly sampled 200 data points from the dataset and evaluated each dialogue based on \criterion{Social Intelligence}: \textit{"Social Intelligence evaluates an AI assistant's ability to effectively understand, navigate, and manage social interactions with other users or agents. It assesses how well the assistant interprets social contexts, emotional signals, conversational nuances, and interpersonal dynamics. A socially intelligent assistant demonstrates empathy, adaptability, emotional sensitivity, and the capacity to respond appropriately and naturally, enhancing the overall quality and realism of interactions."}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=1.0\columnwidth]{figures/case_study_appendix.pdf}
+    \caption{Fragment-level functions and clusters identified from computer use agent trajectories under the Action Efficiency criterion. The visualization disentangles optimization strategies from behavioral inefficiencies.}
+    \label{fig:case_study_appendix}
+    \Description{A 2D scatter plot visualization showing clusters of agent behaviors related to Action Efficiency. The map reveals distinct groups of positive and negative behaviors. On the positive side, clusters represent optimization strategies, labeled with annotations such as "Optimization through Direct Manipulation" and "Keyboard Shortcuts for Efficiency." On the negative side, clusters highlight inefficiencies, featuring labels like "Redundant Navigation Issues" and "Excessive detail in simple explanation".}
+\end{figure}
+
+\subsection{Computer Use Agents}
+\label{appendix:example_agents}
+We applied our approach on the AgentNet dataset~\cite{wang2025opencua}, which contains the trajectory data of computer use agents including the agent's reasoning and actions.
+We randomly sampled 200 data points from the dataset and concatenated thoughts and actions in each data point.
+Then, we evaluated each agent's trajectory based on \criterion{Action Efficiency}: \textit{"This criterion evaluates the efficiency and economy of the action sequences executed by the agent to achieve a goal. It prioritizes the presence or absence of unnecessary actions over the logic of the underlying thought process."}
+
+Figure ~\ref{fig:case_study_appendix} visualizes the landscape of fragment-level functions surfaced from the agents' traces, showing distinct behavioral patterns that binary success metrics often obscure.
+On the positive side, the approach surfaces distinct optimization strategies that can distinguish between agents demonstrating expert-level proficiency via \textit{``Keyboard Shortcuts''} and those minimizing steps through \textit{``Direct Manipulation''} of the interface.
+Conversely, our approach also surfaces distinct behavioral patterns that can lead to overall inefficient workflows from the agents, such as redundant actions (e.g., \textit{``Redundant Navigation Issues''}) and superfluous action instructions (e.g., \textit{``Excessive Detail in Simple Explanation''}).
+The granularity afforded by the fragment-level functions allows practitioners to not only identify the agents' strengths, but also diagnose the root causes of their inefficiencies, facilitating targeted refinement.
+
+\input{prompts/evaluation}
+\input{prompts/base_cluster}
+\input{prompts/super_cluster_extraction}
+\input{prompts/super_cluster_deduplicate}
+\input{prompts/super_cluster_reassign}

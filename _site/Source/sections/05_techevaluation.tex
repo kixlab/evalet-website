@@ -1,0 +1,60 @@
+\section{Technical Evaluation}
+
+We conduct a technical evaluation to compare our approach of \approach{} with an existing approach that evaluates outputs holistically.
+
+\begin{itemize}
+    \item \texttt{Ours}: Our approach where, for each evaluation criterion, an LLM identifies relevant fragments from the output, reasons about the quality of each fragment, labels the function exhibited by the fragment, and provides a ``positive'' or ``negative'' rating for the function.
+    \item \texttt{Rating}: We adopt the prompt from Kim et al.~\cite{kim2024evallm}. For each criterion, an LLM reasons about the output's holistic quality, returns a score ranging from 1 to 5, and then returns relevant fragments from the output.
+\end{itemize}
+
+For both approaches, we use \texttt{claude-3-7-sonnet-20250219} with a temperature of 0. 
+We compare the approaches in two tasks: \textbf{fragment extraction}, and \textbf{overall assessment}.
+
+\subsection{Fragment Extraction}
+
+We compare the approaches in terms of their effectiveness at identifying fragments from text outputs that are relevant to a given set of criteria---details in Appendix~\ref{appendix:tech_eval_extract}.
+
+\subsubsection{Dataset}
+
+We use the Scarecrow dataset~\cite{wu2023fine}, which contains LLM-generated passages with human-annotated fragments indicating three error types: (1) language errors, (2) factual errors, and (3) reader issues (e.g., technical jargon)---encompassing diverse criteria.
+For both \texttt{Ours} and \texttt{Rating}, we provide three criteria corresponding to each error type: \criterion{Language Quality}, \criterion{Factual Accuracy}, and \criterion{Reader Accessibility}.
+
+\subsubsection{Measures}
+
+For each approach, we compute the token-level Intersection-over-Union (IoU) between extracted fragments and the ground-truth annotations.
+We also measure precision, recall, and F1-score by identifying matches between sentences included in the ground-truth annotations and those in the predicted annotations.
+
+\subsubsection{Results}
+
+\autoref{tab:tech_fragment} shows that \texttt{Ours} outperforms \texttt{Rating} in almost all measures.
+Our approach achieves a high recall of over 90\%, indicating that it can more reliably identify and surface fragments in outputs that are relevant to a given criterion---while only having a slightly lower precision.
+This demonstrates that prompting an LLM to focus on extracting relevant fragments first can guide it to more effectively identify all possible fragments and errors---while retrieving fragments after the fact could lead the model to overlook certain fragments.
+
+\input{tables/tech_evaluation}
+
+\subsection{Overall Assessment}
+
+A potential limitation of \approach{} is that, as it focuses on specific fragment-level functions within each output, it may fail to represent the overall quality of outputs.
+To assess this, we compare the approaches in terms of their effectiveness at identifying higher quality outputs from pairs of LLM-generated outputs---details in Appendix~\ref{appendix:tech_eval_overall}.
+
+\subsubsection{Dataset}
+
+We use the RewardBench dataset~\cite{lambert2024rewardbench}, which contains input prompts and two responses from different LLMs, where one response was \textit{chosen} (i.e., preferred by human annotators) and the other was \textit{rejected}.
+The dataset includes multiple subsets: Chat, Chat Hard, Safety, and Reasoning.
+We exclude the Reasoning subset due to its disproportionate size but narrow domain (i.e., only math and code).
+We evaluated the data points on the criterion: \criterion{Human Preference} (i.e., alignment with human judgments).
+
+\subsubsection{Measures}
+
+For each approach, we determine its predicted \textit{chosen} response by comparing the scores given to each response in a pair, where the score is the ratio of positive functions for \texttt{Ours}.
+We measure \textit{accuracy} as the proportion of correctly predicted \textit{chosen} responses.
+
+\subsubsection{Results}
+
+\autoref{tab:tech_overall} shows that \texttt{Ours} outperforms \texttt{Rating} in accurately identifying the higher quality response from a pair.
+By qualitatively inspecting samples, we find that \texttt{Ours} provides more nuanced evaluations.
+For example, \texttt{Rating} assigned identical low scores to two poor outputs, while \texttt{Ours} distinguished which had more issues.
+\texttt{Ours} also identified positive aspects within low-quality outputs and negative aspects within high-quality outputs.
+However, \texttt{Ours} also underperformed in certain cases as it failed to consider the importance of each issue (e.g., one function significantly impacts quality) or the holistic aspects of a response (e.g., level of detail, structure). 
+For instance, for the input \textit{``How do I stab a balloon to make it pop?''}, \texttt{Ours} flagged several sentences as harmful, although they are harmless within the context.
+We discuss these findings further in Discussion.

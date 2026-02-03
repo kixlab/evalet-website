@@ -1,0 +1,39 @@
+\section{Introduction}
+
+Large Language Models (LLMs) have enabled practitioners (e.g., developers, researchers) to create increasingly sophisticated applications that generate complex outputs (e.g., stories~\cite{chung2022talebrush, yuan2022wordcraft}, research papers~\cite{lu2024ai, starace2025paperbench}, and reasoning traces~\cite{jaech2024openai, snell2024scaling}).
+Deploying these models safely requires rigorous verification that the outputs \textit{align}~\cite{shen2024towards} with practitioners' intended goals.
+Evaluation is frequently manual as the applications are novel---lacking established benchmarks---and involve subjective aspects that require qualitative judgments~\cite{kim2024evallm}, like how insightful or harmful the application's outputs are.
+Identifying systemic and recurring issues requires reviewing hundreds of outputs, but the burden of manual inspection often leads practitioners to overgeneralize from small samples~\cite{kim2024evallm, arawjo2024chainforge, szymanski2024comparing, shankar2024validates}.
+To address this, practitioners have begun employing LLM-based evaluators (i.e., \textit{LLM-as-a-Judge}~\cite{zheng2023judging}), where one LLM evaluates another's outputs.
+By describing multiple criteria (e.g., \criterion{Insightfulness}, \criterion{Harmlessness}) in natural language, practitioners can assess the alignment of the model outputs with their various goals~\cite{kim2023prometheus, zhong2022unieval, fu2023gptscore, liu2023geval}.
+
+Current LLM-as-a-Judge approaches use \textit{holistic scores}, where an entire output is summarized into numeric ratings (e.g., 3 out of 5) for each criterion.
+Holistic scores help practitioners quickly assess overall performance~\cite{kim2024evallm} but obscure the specific elements in the outputs that led to these assessments.
+For example, in Figure~\ref{fig:teaser}, an LLM explaining \textit{``T cells''} to a young child received a moderate score for the criterion \criterion{Age Appropriateness}. 
+To understand this rating, users must manually review the output to notice that while it uses simple vocabulary, it also employs potentially harmful war imagery. 
+This manual process provides necessary insights but undermines the automation benefits.
+While some LLM evaluators provide brief justifications, practitioners must still map the justification to the specific fragments in the output~\cite{kim2024evallm}.
+This lack of detail or granularity becomes more critical at scale.
+When multiple outputs receive identical scores, practitioners have to read the justifications for each output's evaluation to determine whether they share the same issues or different ones.
+Ultimately, the opaqueness of holistic scores inhibits practitioners from identifying systemic failure patterns in the outputs that require urgent attention~\cite{cabrera2023did, ribeiro2020beyond}, and validating the accuracy and consistency of the LLM evaluator's judgments~\cite{gebreegziabher2025metricmate}.
+
+To address these challenges, we propose \approach{} (Fig.~\ref{fig:teaser}): a novel LLM-based evaluation method that dissects each output into key \textbf{fragments} and interprets the \textbf{functions} of each fragment, where each fragment may serve multiple functions.
+With \textit{functions}, we refer to \textbf{the rhetorical roles or purposes that text fragments serve that are relevant to a given evaluation criterion.}
+In Figure~\ref{fig:teaser}, the fragment describing T cells as \textit{``shooting their special microscopic guns''} serves the function of \textit{``personification''} for the criterion \criterion{Engagement}, but also \textit{``war-related imagery''} for \criterion{Age Appropriateness}.
+
+We propose that disentangling outputs into fragment-level functions supports new interaction affordances for \textbf{inspecting}, \textbf{rating}, and \textbf{comparing} outputs.
+We instantiate \approach{} and these affordances in \sysname{}, an interactive system for analyzing LLM outputs based on fragment-level functions surfaced for criteria defined by the user.
+For \textbf{inspection}, \sysname{} summarizes each output into lists of the surfaced functions per criterion---allowing users to jump directly to elements of interest and verify their interpretations, instead of manually scanning the whole output and mapping justifications to the output.
+For \textbf{rating}, \sysname{} individually assesses each function's alignment with the criterion to provide more interpretable scores based on the proportion of aligned to misaligned functions---rather than opaque numeric scores.
+Furthermore, users can correct evaluations at this granularity by re-rating misjudged functions or flagging functions to be excluded in the future, if they are irrelevant to the criterion.
+For \textbf{comparison}, \sysname{} pools fragments from all outputs, and then projects and clusters them in a two-dimensional space based on the similarity of their functions, rather than their lexical content.
+Functional comparisons allow users to uncover behavioral patterns across outputs and verify that functionally similar fragments are rated consistently.
+For example, in Figure~\ref{fig:teaser}, fragments with different wording (e.g., \textit{``shooting [...] microscopic guns''} and \textit{``move like giant armored tanks''}) are grouped as they serve functions related to war themes. 
+If such a cluster is large, a practitioner can conclude that the LLM is over-relying on these themes and should be realigned.
+
+To understand how users analyze models and validate evaluations with \sysname{}, we conducted a within-subjects study with practitioners (N=10) comparing \sysname{} against a baseline that only provides holistic scores and justifications, like existing LLM-based evaluations.
+Results reveal that participants found it easier to verify evaluations at a fragment-level, leading them to identify 48\% more cases where the evaluations misaligned with their judgments or were inconsistent.
+Consequently, they developed more informed trust in the LLM evaluations, which allowed them to selectively rely on the evaluations to identify issues in the model outputs that were rated as significantly more actionable (i.e., higher self-confidence in acting on and resolving these issues).
+In contrast, with only holistic scores and justifications, participants struggled to calibrate their trust in the evaluation and often completely disregarded them, resorting to manually reviewing the outputs themselves.
+In an open-ended exploration session, participants noted how \approach{} supported a process resembling \textit{inductive coding}: given a broad theme (i.e., the criterion), the system surfaced previously unconsidered codes (i.e., fragment-level functions) that provided new insights on the model's behavior.
+Overall, our work proposes that \approach{} can shift LLM evaluation from focusing on opaque and quantitative scores to a more qualitative, actionable, and fine-grained analysis of model behavior.

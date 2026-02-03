@@ -1,0 +1,12 @@
+\begin{table}[t]
+\centering
+\begin{tabular}{@{}lcccc@{}}
+\toprule
+\textbf{Method}       & \textbf{Overall} & \textbf{Chat}  & \textbf{Chat-Hard} & \textbf{Safety} \\ \midrule
+\textbf{\texttt{Ours}}  & \textbf{0.801}            & \textbf{0.842} & \textbf{0.559}              & \textbf{0.849}           \\
+\textbf{\texttt{Rating}} & 0.755   & 0.741          & 0.529     & 0.831  \\ \bottomrule
+\end{tabular}%
+\caption{Performance of the tested methods in terms of their accuracy at identifying the higher quality outputs from a pair of LLM-generated outputs. The table shows the accuracy for the whole dataset and for each subset.}
+\Description{This table evaluates the accuracy of two methods, Ours and Rating, at selecting higher-quality outputs from LLM-generated pairs. The evaluation is reported across four settings: Overall, Chat, Chat-Hard, and Safety. Our method outperforms the baseline in all categories, achieving the highest accuracy overall (0.801 vs. 0.755), as well as in Chat (0.842 vs. 0.741), Chat-Hard (0.559 vs. 0.529), and Safety (0.849 vs. 0.831).}
+\label{tab:tech_overall}
+\end{table}

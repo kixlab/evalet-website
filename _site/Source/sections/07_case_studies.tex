@@ -1,0 +1,48 @@
+\section{Example Cases}\label{sec:example_cases}
+
+To demonstrate the generalizability of \approach{} and the insights that can be gained through it, we present three example cases of the approach with diverse LLMs and tasks.
+Specifically, we evaluate: (1) \textit{metacognition} in reasoning LLMs, (2) \textit{harmlessness} in user-LLM conversations, and (3) \textit{social intelligence} in agent simulations.
+In this section, we briefly introduce the data that was evaluated and qualitative observations from the evaluations.
+In Appendix~\ref{appendix:example_cases}, we include further details and an additional example on computer use agents.
+
+\subsection{Metacognition in Reasoning}
+
+Reasoning-based LLMs generate explicit \textit{``reasoning''} traces before providing final answers---leading to significant performance gains~\cite{jaech2024openai}.
+However, assessing long reasoning traces can be hard. 
+We applied \approach{} to 210 reasoning traces~\cite{openthoughts} from DeepSeek-R1~\cite{guo2025deepseek} on the criterion \criterion{Metacognitive Insight} (i.e., model actively reflects upon, regulates, and articulates its thought process).
+
+As seen in \autoref{fig:case_studies}A, \approach{} surfaces diverse reasoning steps from the LLM's traces that resemble human metacognition.
+For example, the fragment-level functions reveal behaviors such as self-questioning, explicit acknowledgment of uncertainties, and proactive consideration for edge cases.
+While the evaluations tend to be overly positive, a closer look at these functions shows that the evaluator even credits metacognitive-like statements, despite them not being beneficial.
+For example, in a reasoning trace, the model asks itself a question but will then immediately answer it, which superficially mimics human-like thought patterns but may not indicate authentic introspection or uncertainty.
+From here, practitioners could refine the evaluation criterion to assess the actual impact of these metacognitive-like behaviors.
+
+\begin{figure*}[t]
+    \centering
+    \includegraphics[width=1.00\textwidth]{figures/case_studies.pdf}
+    \caption{Fragment-level functions and their clusters identified through our approach for three types of tasks and criteria: (a) evaluating metacognitive insight in the reasoning traces of LLMs, (b) evaluating harmlessness in red teaming user-LLM conversations, and (c) evaluating social intelligence in simulated interactions between LLM agents.}
+    \Description{This figure presents a visual overview of clusters identified across three evaluation tasks: metacognitive insight in reasoning tasks, harmlessness in user-LLM conversations, and social intelligence in simulated interactions. Each subfigure displays a 2D embedding space of functions, where similar behaviors are grouped into color-coded clusters and annotated with representative functions that are discussed in the paper.}
+    \label{fig:case_studies}
+\end{figure*}
+
+\subsection{Harmlessness in Conversations with Users}
+
+Ensuring that LLMs refrain from providing potentially harmful responses is a critical problem~\cite{bai2022constitutional}.
+To understand LLM performance in this regard, we applied our approach on 200 LLM responses to questions that purposefully elicit harmful behaviors~\cite{bhardwaj2023redteaming}.
+We assess these on \criterion{Harmlessness} (i.e., the assistant engages safely and respectfully).
+
+\autoref{fig:case_studies}B illustrates different fragment-level functions along the spectrum of harmlessness.
+For example, the LLM either (1) completely refuses to respond, (2) responds with ethical alternatives to harmful behaviors, (3) provides potentially harmful information without adequate warnings, or (4) explicitly recommends harmful behaviors (e.g., coercion and intimidation).
+This spectrum of harmlessness is reflected in the visualization, where harmless functions are at the top, potentially harmful functions are in the middle, and extremely harmful functions are at the bottom.
+Practitioners can use these functions to identify input patterns that lead to more harmful outputs or further define their standards for acceptable behavior by inspecting the functions.
+
+\subsection{Social Intelligence in Simulated Interactions}
+
+LLMs are increasingly used as \textit{agents} that simulate human users and social interactions~\cite{park2023generative, park2024generative, zhou2023sotopia}.
+However, one may ask: what social behaviors should these agents simulate?
+To investigate this, we applied our approach on 200 simulated dialogues between two role-playing LLM agents based on \criterion{Social Intelligence} (i.e., the agent effectively understands, navigates, and manages social interactions).
+
+\autoref{fig:case_studies}C highlights various positive social behaviors within the simulations, such as agents building rapport through mirroring or balancing how much they collaborate with how much they maintain their own boundaries.
+However, the surfaced functions also reveal potentially anti-social behaviors---for instance, agents may neglect building a relationship with the other agent and focus solely on their own needs and goals.
+Practitioners can further explore these functions to identify behaviors that should be encouraged or mitigated in simulated agents, or to identify additional evaluation criteria.
+For example, one of the surfaced functions is \textit{``Character Consistency Failures''}, but these could be assessed by a separate criterion that is specific to role-playing abilities.

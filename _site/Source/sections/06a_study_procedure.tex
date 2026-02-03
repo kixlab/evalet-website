@@ -1,0 +1,80 @@
+\section{User Study}
+
+To understand the effect of \approach{} when compared to existing LLM-based evaluation approaches, we conducted a within-subjects study where we compared \sysname{} to a baseline that only provides holistic scores and justifications for each output.
+Through this study, we aimed to answer the following research questions:
+\begin{itemize}
+    \item \textbf{RQ1}. Can \textit{\approach{}} aid practitioners in validating LLM-based evaluations?
+    \item \textbf{RQ2}. How do practitioners identify and interpret issues in an LLM's outputs through evaluations of fragment-level functions?
+    \item \textbf{RQ3}. Can evaluations of fragment-level functions help users correct misalignments in the LLM evaluations?
+    \item \textbf{RQ4}. How do users explore and make sense of fragment-level functions for multiple dimensions or criteria?
+\end{itemize}
+
+\subsection{Study Design}
+
+\subsubsection{Participants} 
+
+We recruited 10 participants through posts on online forums within our institution. 
+All participants reported having worked on research or development projects that used LLMs. 
+Two participants reported having more than 2 years of experience working with LLMs, six had 1–2 years, one had 6 months–1 year, and finally one participant had 3–6 months.
+Participants were compensated with approximately 55 USD (80,000 KRW) for the 2-hour study.
+
+\subsubsection{Conditions}
+
+Participants analyzed LLM outputs and their evaluations across two tasks in two conditions: \treatment{} and \control{} (Fig.~\ref{fig:study_conditions}).
+The \treatment{} condition was the full \sysname{} interface, without the holistic justifications (i.e., summaries of the fragment-level justifications for each output).
+The \control{} condition was a version of \sysname{} with only the holistic justifications, which closely resembles existing LLM-as-a-Judge approaches~\cite{zheng2023judging, kim2024evallm} but ensures that evaluations in both conditions contain the same information.
+To ensure a fairer comparison, the \control{} condition also summarizes the holistic justification into a single label for each output (Fig.~\ref{fig:study_conditions}A), serving like a function description but for the whole output. 
+These labels were embedded, clustered, and visualized the same way as in the \treatment{} condition (Fig.~\ref{fig:study_conditions}C).
+For each output, the \control{} condition also highlights fragments relevant to each criterion (Fig.~\ref{fig:study_conditions}B), similar to prior work~\cite{kim2024evallm}, and allows users to flexibly select any fragments in the outputs to add as positive, negative, or excluded examples for a criterion.
+
+\begin{figure*}[b]
+    \centering
+    \includegraphics[width=1.00\textwidth]{figures/study_conditions.pdf}
+    \caption{Comparisons of the main interface components across the study conditions. (A) The \treatment{} condition's Details Tab displays the list of fragment-level functions for each output, while the \control{} condition shows a label that summarizes the holistic justification for that output. (B) In evaluation details, the \treatment{} condition shows the function label, rating, and evaluation justification for each fragment, but does not show the holistic justification. The \control{} condition highlights the evaluated fragments, but only presents the holistic justification and score. (C) Both conditions feature the Map Visualization. But, in the \control{} condition, each point represents a whole output based on the embedding of the holistic evaluation label.}
+    \Description{This figure compares interface components between the Fragmented (treatment) and Holistic (control) study conditions. In the Details Tab, the Fragmented condition displays individual function label's evaluations, while the Holistic condition shows only a summary of overall justification per output. In the Evaluation Details view, the Fragmented condition presents separate functions and reasoning for each function label, whereas the Holistic condition provides a overall justification and score. In the Map Visualization, the Holistic condition's each point represents an entire output based on the overall evaluation embedding, instead of individual functions.}
+    \label{fig:study_conditions}
+\end{figure*}
+
+
+\subsubsection{Tasks}
+
+Participants evaluated LLM outputs for the same two generation tasks: (1) writing a short horror story from a given set of keywords, and (2) writing an advertisement post for social media for a given product description.
+We chose these two tasks as they involve subjectivity, require no prior expertise, have similar input-output lengths, and have been explored by prior work~\cite{kim2023cells, suh2024luminate, yuan2022wordcraft}.
+For each task, we created a dataset of 100 inputs and then generated outputs using \texttt{gpt-4o-mini-2024-07-18}, emulating a scenario of evaluating a relatively low-performing model.
+Then, we pre-evaluated these datasets using our approach to ensure that all participants, irrespective of condition, received the same evaluations for each task.
+Specifically, we used the following criteria for each task: (1) \criterion{Horror Atmosphere} for short horror stories (i.e., creating immersive and constant fear or psychological anxiety), and (2) \criterion{Emotional Effect} for the advertisement posts (i.e., effectively eliciting meaningful and genuine emotional responses from viewers).
+Since participants were more fluent in Korean, we built the datasets in Korean, and added one line to our evaluation prompt to instruct the LLM to return function labels and justifications in Korean to minimize fluency-related effects.
+Full details on the datasets and criteria in Appendix~\ref{appendix:study_datasets}.
+
+\subsubsection{Procedure}
+
+Participants signed the informed consent form prior to the study.
+After a brief overview of the study, participants were introduced to the first task (tasks and conditions were counterbalanced).
+Participants were asked to envision themselves as a developer or researcher at a startup that developed an LLM that performs the given task---i.e., the \textit{task LLM}.
+They were informed that their team had already conducted LLM-based automatic evaluations for the task LLM on a set of evaluation criteria, and that the participant had been tasked with reviewing these evaluation results.
+Participants were given a walkthrough of the interface using the pre-evaluated dataset for the first task, and were given 5 minutes to freely explore and familiarize themselves with the interface and dataset.
+
+For the first task with the first interface, participants were instructed to perform two sub-tasks:
+\begin{itemize}
+    \item \textbf{Identify Issues in the Task LLM's Outputs and the LLM-based Evaluations} (RQ1, RQ2) - 15 minutes: Participants were asked to identify common or significant issues (e.g., weaknesses, errors) in the task LLM's outputs. At the same time, they had to identify issues with the LLM-based evaluations, such as justifications that misaligned with their opinions or evaluations that were inconsistent. Participants listed each distinct issue as a separate bullet point in a provided document.
+    \item \textbf{Correct the LLM-based Evaluations} (RQ3) - 10 minutes: Participants received two predefined issues with the LLM evaluations: an aspect that was being evaluated inconsistently and an aspect that should not be assessed within the current criterion---list of evaluation issues in Appendix~\ref{appendix:study_evaluation_issues}. Participants were asked to revise the criterion or add relevant examples to address these issues, re-running evaluations as needed to verify corrections.
+\end{itemize}
+
+After completing the two sub-tasks, participants answered a post-task survey and we conducted a short semi-structured interview about their experience.
+Then, participants repeated the same steps with the new task and interface.
+At the end of the study, participants returned to the \treatment{} condition, selected a new criterion from a given list, ran evaluations, and freely explored the new evaluations while thinking aloud for the remaining study time (RQ4).
+
+\subsubsection{Measures}
+
+For qualitative data, we coded the comments from the semi-structured interviews through a thematic analysis.
+For quantitative data, we analyzed post-task surveys responses, where participants rated (7-point Likert scale) their self-confidence in (1) identifying output- or evaluation-related issues that were critical (\textit{importance}), (2) covering most issues (\textit{coverage}), and (3) being able to act on and resolve these issues (\textit{actionable}). 
+Participants also rated their perceived workload using five items from the NASA-TLX questionnaire (excluding the ``Physical Demand'').
+Likert scale responses were analyzed using the Wilcoxon signed-rank test.
+
+We also analyze quantitative data from the sub-tasks.
+In the first sub-task, we counted the number of distinct output and evaluation issues identified by participants---filtering out unrelated comments (e.g., interface usability issues).
+For the second sub-task, we created separate test sets that exhibited the evaluation issues that were given to participants. 
+We created 20 data points per task, 10 data points per evaluation issue.
+For each participant and task, we evaluated the test sets on the participant's revised criterion and calculated the percentage of data points where the issues were addressed---calculation details in Appendix~\ref{appendix:study_metrics}.
+Finally, we also analyze participants' interaction logs to measure the number of times that they interacted with individual fragment-level functions or outputs, and through what interface features.
+For these measures, we conducted Shapiro-Wilk tests to determine if the data was parametric, and then used a paired t-test (if parametric) and a Wilcoxon signed-rank test (if non-parametric).

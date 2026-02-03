@@ -1,0 +1,46 @@
+\newcommand{\sysname}{\textsc{Evalet}}
+\newcommand{\approach}{\textit{functional fragmentation}}
+\newcommand{\Approach}{\textit{Functional fragmentation}}
+\newcommand{\treatment}{\texttt{Fragmented}}
+\newcommand{\control}{\texttt{Holistic}}
+\newcommand{\stats}[7]{($\text{\treatment{}}=#1\pm#2$, $\text{\control{}}=#3\pm#4$, $#5=#6$, $p#7$)}
+\newcommand{\myquote}[1]{\textit{``#1''}}
+\definecolor{syscolor}{HTML}{3788F7}
+\newcommand{\systemText}[1]{\textcolor{syscolor}{\texttt{#1}}}
+\newenvironment{block}%
+  {\list{}{\leftmargin=0.2in\rightmargin=0in}\item[]\color{blockcolor}}%
+  {\endlist}
+  
+\newcommand{\criterion}[1]{%
+  \tikz[baseline=(text.base)] {%
+    \node (text) [%
+      fill=gray!10,       % The background color (gray!15 is subtle)
+      rounded corners=2pt, % The curvature of the corners
+      inner sep=2pt,      % Padding (distance between text and edge)
+      anchor=base         % Helps align with text baseline
+    ] {\texttt{#1}};%
+  }%
+}
+
+\definecolor{darkgreen}{HTML}{006400}
+\definecolor{darkorange}{HTML}{CE8E1A}
+\definecolor{teal}{HTML}{00BAAB}
+\definecolor{brown}{HTML}{800000}
+\definecolor{purple}{HTML}{BF4DDA}
+\definecolor{navy}{HTML}{002455}
+
+\newcommand*{\inlineimage}[1]{%
+    \raisebox{-.3\baselineskip}{%
+        \includegraphics[
+        height=\baselineskip,
+        width=\baselineskip,
+        keepaspectratio,
+        ]{#1}%
+    }%
+}
+
+\definecolor{syscolor}{HTML}{3788F7}
+\definecolor{blockcolor}{HTML}{555555}
+\newcommand{\revise}[1]{%
+  \textcolor{red}{\fcolorbox{red}{red}{\textcolor{white}{R}}~#1}%
+}

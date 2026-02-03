@@ -1,0 +1,66 @@
+\section{Discussion}
+
+In this paper, we present \approach{}, a novel approach for evaluating and interpreting LLM outputs based on their constituent fragment-level functions, and \sysname{}, an interactive system that instantiates this approach.
+In this section, we suggest guidelines for integrating both fragmented and holistic evaluations in practice, discuss how \approach{} supports more nuanced analysis with LLM-as-a-Judge, and propose the need for further work in supporting qualitative and interactive evaluation of AI.
+
+\subsection{Guidelines for Integrating Fragmented and Holistic Evaluations}
+
+As revealed by our user study, both fragmented (i.e., at the fragment and function-level) and holistic (i.e., at the output-level) evaluations have distinct merits.
+In practice, we suggest that these types of evaluation are complementary and practitioners should employ them together through a layered workflow:
+
+\begin{enumerate}
+    \item \textbf{Start with Fragmented Evaluation on Broad Criteria:} As described by study participants, \approach{} can surface diverse fragment-level functions that should be considered within each criterion. Through this, practitioners can more comprehensively identify concrete aspects to evaluate for each criterion, including those that were not initially considered.
+    \item \textbf{Iterate and Concretize Criteria with Function Examples}: By exploring fragment-level functions, practitioners can refine their criteria by deciding on what functions the evaluator should continue to surface and how these should be assessed. Practitioners should iteratively refine their criteria and example sets while re-evaluating the outputs until most misalignments disappear and the function clusters stabilize (i.e., similar clusters are presented each evaluation).
+    \item \textbf{Zoom Out and In}: Then, practitioners should \textit{zoom out} to inspect the whole outputs, and their holistic justifications and scores to understand the overall qualities and similarities of outputs. As the underlying fragment-level evaluations have been corrected and aligned, practitioners can more reliably depend on the signals from the holistic scores. At this stage, practitioners can dive deep back to the fragmented evaluations when they need more details (e.g., identify concrete issues in low scoring outputs or the patterns of those with mixed scores). This allows users to flexibly alternate between levels of abstraction~\cite{suh2023sensecape}.
+\end{enumerate}
+
+To fully support this integrated workflow, \sysname{} must also capture the holistic attributes of outputs (e.g., tone, structure).
+While the system does not currently support this, this can be easily addressed by introducing an additional LLM module after the \approach{} step that extracts holistic attributes from the output that are related to each criterion.
+These attributes can be represented as sentence-level descriptions (e.g., "comedic tone")---the same format as the function labels of fragments.
+Then, these holistic attribute labels can also be compared and visualized with the other fragment-level functions, and also factored into the holistic scores.
+
+
+\subsection{Calibrating Trust in LLM-as-a-Judge through Verification}
+
+LLM-as-a-Judge can facilitate inspection, assessment, and analysis of LLM outputs at scales that are infeasible through human effort alone.
+However, practitioners must carefully \textit{calibrate} their trust by recognizing where they disagree with the LLM evaluator, where it hallucinates, and when it is inconsistent.
+Our study showed that failing to calibrate trust often led practitioners to dismiss LLM-based evaluations and revert to manual review---losing both efficiency benefits and potentially valuable insights.
+Despite this, participants still relied on the evaluation scores to prioritize which samples to inspect further, often focusing on extreme scores and thereby overlooking nuanced model behaviors---which can lead to cases where one identifies explicit model biases while missing subtler but equally harmful ones~\cite{bai2024implicit}.
+
+Our approach, \approach{}, supported more calibrated and nuanced use of LLM-as-a-Judge by facilitating validation at a granular yet manageable level.
+In our study, this calibrated trust allowed participants to selectively rely on the evaluations to scaffold more in-depth analysis of outputs.
+Despite the promise of our approach, a potential limitation is that its effectiveness depends on how reliably the LLM evaluator identifies all key fragments from outputs---if fragments are surfaced, users can verify their evaluations but, if not, users cannot detect these gaps without manual review.
+Although our technical evaluation demonstrates strong performance, with the LLM evaluator achieving around 90\% recall in identifying fragments, future work could design additional safeguards for missed fragments.
+For example, \sysname{} could integrate a separate map visualization that embeds fragments that were not assessed by the evaluator for any criterion to support navigation of missed fragments.
+
+\subsection{Increasing Trend in Increasingly Longer Outputs}
+
+Recent trends in LLM advancements have focused on generating increasingly longer outputs.
+For example, agentic systems like Manus~\cite{manus}, Genspark~\cite{genspark}, or Gemini Deep Research~\cite{deepresearch} can carry out multi-step workflows to create complex outcomes (e.g., multi-section reports, multi-file codebases).
+Recent research looks to further increase output length by increasing LLM's \textit{test-time compute}~\cite{snell2024scaling, guo2025deepseek, kim2025scaling} (i.e., training models to generate more tokens at once), or extending their \textit{context windows} to handle longer inputs and outputs~\cite{llama4, hsieh2024ruler, ding2024longrope}.
+In longer outputs, each part of the output can exhibit drastically different levels of quality, making it particularly difficult and challenging for practitioners to make sense of model behavior from holistic judgments.
+We propose that \approach{} can help practitioners break down and interpret complex and lengthy outputs.
+For example, in Appendix~\ref{appendix:example_agents}, we present an example of applying our approach to the traces from computer use agents, which surfaced meaningful behaviors such as agents using keyboard shortcuts to complete tasks more efficiently or instances where the agent performed inefficient redundant actions.
+Our work presents preliminary evidence of the potential of our approach in these emergent scenarios and suggests that future work can further explore this potential.
+
+\subsection{Qualitative and Interactive Evaluation of AI}
+
+AI/ML evaluation has mostly focused on applying \textit{quantitative} metrics in benchmark datasets.
+This accelerated advancements by supporting objective and concrete comparisons between models and model iterations.
+However, as models reach exceptionally high but similar performance on these benchmarks, users have started to \textit{qualitatively} compare models based on their behaviors and how these fit with their own needs~\cite{dunlap2024vibecheck}---referred to as \textit{``vibe checks''}~\cite{karpathy2025tweet}.
+This raises a crucial question: \textit{``how can we help users to understand and make sense of qualitative model behaviors at scale?''}
+To tackle this problem, our work proposes \approach{} to focus evaluation on the individual qualitative fragment-level functions in model outputs and, in turn, support users in sensemaking of model behaviors across outputs.
+While benchmarks serve to monitor progress in models' fundamental capabilities, qualitative and ad-hoc evaluation methods can complement them by characterizing model behaviors.
+Furthermore, interactive and qualitative evaluation methods, like \approach{}, are critical in tasks and domains where benchmarks do not exist.
+Given its rich body of work in sensemaking~\cite{chau2011apolo, andre2014crowd, liu2024selenite, pirolli2005sensemaking} and explainability~\cite{liao2020questioning, lai2019human, kaur2022sensible, wang2019designing}, we propose that the HCI community is ideally positioned to tackle this challenge and integrate itself more closely in the advancement of AI models by developing novel interactive evaluation methods.
+
+\subsection{Limitations}
+
+Our work has several limitations:
+\begin{itemize}
+    \item \textbf{Function Priority}: Our technical evaluation showed that our approach does not account for the relative importance of each fragment-level function. Future work could add priority ratings to functions (e.g., manually by the user or suggested by the system).
+    \item \textbf{Real-World Practice and Deployment}: Further research into real-world use of \approach{} and \sysname{} is required to understand how this evaluation method integrates into practitioners' workflows. To facilitate this, we plan to release \sysname{} as open-source.
+    \item \textbf{Controllability}: \sysname{} supports control of the \approach{} process by allowing users to exclude or re-rate fragment-level functions. We initially included or considered additional controls (e.g., function relabeling, cluster editing, fragment-size editing), but pilot users found that these added cognitive overhead without clear benefit. Due to the time constraints in the user study, we opted for not including these features in the system used during the study. However, as seen from the findings, some participants reported needing more control (e.g., fragment size), suggesting that this feature is valuable in certain workflows or to certain users. In the open-source release of \sysname{}, we plan to introduce these controls as advanced settings for users.
+    \item \textbf{Dataset Scale}: Our user study and examples used datasets with 100–200 samples, whereas practitioners often handle larger datasets. Although \sysname{} can support these, the linear growth in fragment-level functions and clusters may hinder users' ability to navigate the space and decide where to start their analysis. One way to address this is to apply our clustering technique recursively to create more cluster levels, which can help summarize and decompose the vast space of functions for users. \sysname{} can also incorporate proactive agentic guidance~\cite{pu2025assistance, prasongpongchai2025talk, chen2025need} to identify and highlight significant clusters or functions that can help kickstart users' analysis.
+    \item \textbf{User Study - Fragmented vs. Holistic}: Our user study compared exploration of fragmented evaluations against holistic evaluations to clearly isolate their distinct affordances. In practice, these two methods should be used together. While participants offered insights into how to combine them, further studies are needed to understand actual usage patterns.
+\end{itemize}

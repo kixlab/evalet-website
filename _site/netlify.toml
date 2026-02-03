@@ -1,0 +1,5 @@
+[[redirects]]
+  from = "/demo/*"
+  to = "https://evallm.netlify.app/:splat"
+  status = 200
+  force = true

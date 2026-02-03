@@ -1,0 +1,176 @@
+\begin{figure*}[!b]
+    \centering
+    \includegraphics[width=1.00\textwidth]{figures/system_overview.pdf}
+    \caption{\sysname{} consists of two main components: (A) Information Panel and (B) Map Visualization. In the Information Panel, users can use the Tab Navigator (C) to switch between managing their input-output dataset, defining their criteria set, and viewing evaluation details. Users can initiate evaluations by clicking on \systemText{Run Evaluation} (D). The Map Visualization helps users explore all fragment-level functions across all outputs, where they can toggle what information is displayed using the Map Controls (E). Each fragment-level function is shown as a dot if rated positive or a cross if negative, and users can hover over these to see the function description (F).}
+    \Description{This figure shows Evalet’s main interface, which consists of two coordinated views: an Information Panel on the left and a Map Visualization on the right. The Explore Tab in the Information Panel displays evaluation results grouped by semantic clusters for a selected criterion. Users can switch between tabs through the Tab Navigator, initiate evaluation by the Run Evaluation button, and adjust what is shown on the map via Map Controls. The Map Visualization presents each function as a point (positive) or cross (negative), clustered by semantic similarity. Hovering over a point reveals its function.}
+    \label{fig:system_overview}
+\end{figure*}
+
+\section{\sysname{}: Evaluation of LLM Outputs based on Fragment-Level Functions}
+
+To instantiate the concept of \approach{}, we present \sysname{}, an interactive system that enables users to \textbf{inspect}, \textbf{rate}, and \textbf{compare} LLM outputs at both the fragment-level and output-level.
+Through an LLM-based evaluator, \sysname{} automatically disentangles outputs into fragment-level functions based on user-defined criteria, rates the alignment of each function, and visualizes the evaluations to support exploration and verification of evaluations.
+\sysname{} consists of the following components:
+\begin{itemize}
+    \item \textbf{Input-Output Dataset}: Pairs of \textit{inputs} given to the user's LLM or LLM-based application, and pre-generated \textit{outputs} by the LLM. The user uploads this dataset to the system.
+    \item \textbf{Evaluation Criteria}: Each \textit{criterion} is defined by a name and a description in natural language.
+    \item \textbf{Fragment-Level Functions}: \sysname{} extracts criterion-relevant fragments and interprets the functional role or effect of each fragment to assign a short \textit{function} label. Each function receives a ``positive'' or ``negative'' rating based on its alignment with the criterion\footnote{A single fragment can be interpreted to serve different functions for different criteria, where one such function aligns with its respective criterion while the other misaligns with its criterion. As a result, we rate each \textit{function} rather than each \textit{fragment}.}.
+    \item \textbf{Fragment-Level Justifications}: \sysname{} provides the LLM-based evaluator's \textit{justification} or reasoning for the rating of each fragment-level function.
+    \item \textbf{Holistic Score and Justification}: For each output and criterion, \sysname{} provides a \textit{holistic score}---ratio of positive to total fragment-level functions---and a \textit{holistic justification}, a paragraph summarizing all fragment-level justifications to provide a reasoning on the overall quality of the output.
+    \item \textbf{Base Clusters}: To support comparison and identification of common patterns between outputs, \sysname{} groups similar functions from different outputs into \textit{base clusters} for each criterion. Each cluster is represented by a name and a description.
+    \item \textbf{Super Clusters}: Furthermore, \sysname{} also groups similar base clusters into \textit{super clusters} to provide high-level overviews of the potentially vast landscape of functions.
+\end{itemize}
+
+\subsection{Interface Walkthrough}
+The user interface of \sysname{} has two main components: (1) \textbf{\textit{the Information Panel}} on the left (Fig.~\ref{fig:system_overview}A) and (2) \textbf{\textit{the Map Visualization}} on the right (Fig.~\ref{fig:system_overview}B).
+The \textit{Information Panel} presents details about the LLM outputs, evaluation results, fragment-level functions, and clusters.
+The \textit{Map Visualization} allows users to explore fragment-level functions and clusters in a two-dimensional space.
+These views are synchronized, where information in one component is highlighted if the user interacts with relevant information in the other.
+We illustrate system interactions using an example scenario where a developer, Robin, implements an LLM-based application that generates short advertisement posts from product descriptions.
+
+\subsubsection{Initializing Data and Criteria Set}
+When the user first enters the system, they upload their input-output dataset in the \textit{Database Tab} \inlineimage{figures/ic_database.pdf} in the Information Panel.
+Then, they can define their criteria in the \textit{Criteria Tab} \inlineimage{figures/ic_criteria.pdf} and click on \systemText{``Run Evaluation''} (Fig.~\ref{fig:system_overview}D) to evaluate the outputs on the criteria.
+
+\begin{block}
+  To test her application, Robin uploads a dataset of 100 product descriptions and the advertisement generated for each product into \sysname{}.
+  In the Criteria Tab, she defines two criteria---\criterion{Creativity and Uniqueness} and \criterion{Emotional Effect}---to evaluate whether the generated advertisements are creative and engaging.
+\end{block}
+
+\begin{figure*}[!t]
+    \centering
+    \includegraphics[width=1.00\textwidth]{figures/system_database.pdf}
+    \caption{In the Database Tab, users can view their dataset of input-output pairs. Each item consists of the input, the output, and an evaluation summary. This summary presents the output's holistic score on each criterion (A) and its list of fragment-level functions (B). Users can see more details by clicking on \systemText{View Details} (C). On the details page, the user selects a criterion to view the relevant evaluations (D). Assessed fragments from the output are highlighted in green if positive and orange if negative (E). The bottom of the interface displays the holistic score and justification provided by the LLM (F). By clicking on each fragment, users can view the corresponding function description (G) and the evaluator's reasoning in detail (H).}
+    \Description{This figure shows how users interact with Evalet’s Database Tab to inspect evaluations of individual input-output pairs. Each item displays the input, generated output, and an evaluation summary, including holistic criterion scores and including functions. Clicking "View Details" opens the Evaluation Detail view where users can select a criterion to highlight relevant fragments in the output—green for positive, orange for negative. The bottom of the panel shows the holistic score and justification. Clicking a highlighted fragment reveals its function label and the reasoning behind its evaluation.}
+    \label{fig:system_database}
+\end{figure*}
+
+\subsubsection{Inspecting Evaluation Results}
+
+After the evaluation completes, the user can navigate to the \textit{Database Tab} to skim through each input-output pair and gauge overall quality through the holistic scores on each criterion (Fig.~\ref{fig:system_database}A).
+For more detail, the user can open the evaluation summary for a criterion (Fig.~\ref{fig:system_database}B) to view the list of fragment-level functions surfaced from that output and their individual ratings.
+To reduce cognitive load, \sysname{} presents each function in this list through the name of its base cluster rather than the lengthier function description---instantiating the \textit{Output-Level Inspect} affordance (Sec.~\ref{framework:inspect}) by summarizing outputs into criterion-specific qualities.
+
+To inspect evaluations in detail, the user can click on \systemText{View Details} (Fig.~\ref{fig:system_database}C) to view the full text for the input and output.
+The output has color-coded fragments, which are those that were extracted, interpreted, and rated for the selected criterion (Fig.~\ref{fig:system_database}E).
+Clicking on each fragment reveals the corresponding function description (Fig.~\ref{fig:system_database}G) and the LLM evaluator's justification for that function's rating (Fig.~\ref{fig:system_database}H).
+With the criteria selector (Fig.~\ref{fig:system_database}D), users can switch between the evaluations for each criterion to understand the same output from different perspectives.
+This detail view supports the \textit{Fragment-Level Inspect} and \textit{Rate} affordances (Sec.~\ref{framework:rate}).
+Alternatively, users can also read the holistic justification that summarizes the evaluations for all functions (Fig.~\ref{fig:system_database}F) to gain a holistic understanding of the output's quality---instantiating the \textit{Output-Level Rate} affordance.
+
+\begin{block}
+  As Robin skims through the holistic scores in the Database Tab, she notices that an \textit{``Auto-Focusing Glasses''} ad scored 0\% for both \criterion{Emotional Effect} and \criterion{Creativity and Uniqueness}.
+  Opening the evaluation details, she identifies a highlighted fragment that is negatively rated: \textit{``Transform your vision, transform your life! Step into a brighter, sharper future now!''}
+  The fragment's function description reads: \textit{``Use of exclamatory language to force emotional response''}.
+  Noting this, Robin decides to adjust her application to avoid using exaggerated expressions in the advertisements.
+\end{block}
+
+While skimming through outputs in the Database Tab, users may want to compare outputs with similar functions.
+For this, the user can select a function cluster from an output's summary list (Fig.~\ref{fig:system_database}B) and this will display only the outputs that have a function in the same cluster.
+To support holistic analysis, \sysname{} also presents summary statistics about the cluster and these outputs (Fig.~\ref{fig:system_filter})---including the total number of outputs with functions in the selected cluster, their average scores, and other clusters that contain functions that frequently co-occur with functions in the selected cluster.
+This filtering and statistics instantiates the \textit{Output-Level Compare} affordance (Sec.~\ref{framework:compare}).
+
+\begin{figure*}[!t]
+    \centering
+    \includegraphics[width=1.00\textwidth]{figures/system_explore.pdf}
+    \caption{Users can explore the clusters and fragment-level functions through both the Map Visualization (A) and Explore Tab (B). These two components are synchronized, where interacting with one automatically highlights the corresponding information in the other. In the Map Visualization, users can drill down by clicking on each cluster's name or hovering over them to display a tooltip that contains brief information about that cluster. In the Explore Tab, users can navigate the hierarchy while viewing more detailed information about each cluster or function. Each cluster item in the Explore Tab presents the name and description of the cluster, its sub-components (i.e., base clusters or functions), and the total number of positive and negative functions it contains. Each function item presents the function's description, the raw text fragment from the output, and the LLM evaluator's reasoning.}
+    \Description{This figure shows how users navigate between cluster levels and functions using Evalet’s synchronized Map Visualization and Explore Tab. The Map Visualization supports progressive exploration across three levels: Super Clusters, Base Clusters, and individual Functions. Users can zoom in by clicking or hovering over cluster labels to reveal details. The Explore Tab mirrors this hierarchy, presenting cluster names, descriptions, sub-clusters or functions, and counts of positive and negative examples. Functions further include example fragments and evaluation justifications.}
+    \label{fig:system_explore}
+\end{figure*}
+
+\subsubsection{Exploring the Landscape of Fragment-Level Functions}
+
+To explore the fragment-level functions for a criterion, the user can check the Map Visualization (Fig.~\ref{fig:system_overview}B), which projects the embeddings of all function descriptions from all outputs onto a 2D space.
+Closer points represent similar functions, with dots indicating positively rated functions and crosses indicate negatively rated ones.
+Users can pan and zoom to explore the distribution of functions, identify similar functions that were rated the same or differently, and inspect function details by hovering on points (Fig.~\ref{fig:system_overview}F).
+The clusters of these functions are also presented through color-coded contours and labels.
+Clicking on cluster labels progressively zooms from super clusters to base clusters to individual functions (Fig.~\ref{fig:system_explore}A)---enabling exploration from high-level concepts to detailed insights.
+Hovering over a cluster shows its label and counts of positive to negative functions---signaling the consistency or variability of the evaluations.
+This Map Visualization instantiates the \textit{Fragment-Level Compare} affordance (Sec.~\ref{framework:compare}) by helping users compare functionally similar fragments across multiple outputs.
+
+\begin{block}
+  In the Map Visualization, Robin notices a super cluster labeled \textit{``Creative Marketing Strategies''} for the \criterion{Creativity and} \criterion{Uniqueness} criterion.
+  Curious about what these \textit{``strategies''} are, she clicks on it to find various base clusters: \textit{``Creative Wordplay in Product Marketing''}, \textit{``Scenario-Based Storytelling for Product Benefits''} and \textit{``Strategic Reframing of Product Narratives''}---revealing that the LLM is applying diverse strategies.
+  She notices mixed evaluations in the \textit{``Creative Wordplay''} cluster and clicks on it to inspect its functions.
+\end{block}
+
+Through the Map Controls (Fig.~\ref{fig:system_overview}E), the user can select what information is presented in the map: the super cluster labels, the base cluster labels, or choose to color-code the functions based on their rating---rather than their clusters.
+
+\begin{figure*}[!t]
+    \centering
+    \includegraphics[width=1.00\textwidth]{figures/system_alignment.pdf}
+    \caption{Users can view only the selected fragment-level functions in the \systemText{Selected Entries} mode (A). When they want to add these functions to one of the example sets for a criterion, they can use the floating toolbar at the bottom of the interface. Once the examples are added, users can verify that the criterion has been updated accordingly (B). After rerunning the evaluations, the user can click on the \systemText{Show Examples} toggle in the Map Controls. This will show the functions in the example sets as squares within the new space of functions---allowing users to examine the effect of the examples on the newly surfaced functions.}
+    \Description{This figure illustrates how users manage and apply example functions in Evalet. In Selected Entries mode, users can review specific functions and use a bottom toolbar to label them as positive, negative, or excluded. Once updated, these examples appear in the criterion’s example set. After rerunning the evaluation, users can verify that the new examples were applied by checking their positions—shown as squares—in the updated function distribution within the Map Visualization.}
+    \label{fig:system_alignment}
+\end{figure*}
+
+\subsubsection{Examining the Functions in Detail}
+
+As users interact with the Map Visualization, they can view more details about selected clusters or functions in the \textit{Explore Tab} \inlineimage{figures/ic_explore.pdf} of the Information Panel (Fig.~\ref{fig:system_explore}B).
+Depending on the selection, the Explore Tab shows: (1) all super clusters (i.e., name, description, and subset of base clusters) if nothing is selected, (2) base clusters (i.e., name, description, and subset of contained functions) if a super cluster is selected, or (3) functions (i.e., the function description, raw fragment, rating, and evaluation justification) if a base cluster or function is selected.
+The user can also navigate through the hierarchy in this tab, where clicking on one item will synchronously update the Explore Tab and Map Visualization.
+As the user explores, they can select and collect functions of interest---listed in the \systemText{Selected Entries} mode (Fig.~\ref{fig:system_alignment}A)---to compare functions from different outputs and clusters.
+
+\begin{block}
+  Robin selects two positively rated and two negatively rated functions from the \textit{``Creative Wordplay in Product Marketing''} cluster using the \systemText{Selected Entries} mode.
+  She observes that the fragment \textit{``Illuminate your next chapter''} was evaluated as positive for using metaphor, while the metaphor in \textit{``Calm is just a drop away!''} was rated negatively due to lack of novelty.
+  Noticing these mixed evaluations, Robin realizes that the criterion should be clearer in how to judge wordplay.
+\end{block}
+
+\subsubsection{Correcting the Evaluations}
+
+As the user verifies the evaluations, they may identify cases where (1) they disagree with a function's rating, (2) similar functions were given inconsistent ratings, or (3) the LLM evaluator extracted functions that are irrelevant to the criterion.
+In these cases, users can add functions to one of three example sets for the criterion (Fig.~\ref{fig:system_alignment}A, B): (1) \textit{positive examples} to rate positively, (2) \textit{negative examples} to rate negatively, and (3) \textit{excluded examples} to ignore for this criterion.
+These sets serve as few-shot examples~\cite{brown2020few} in future evaluations.
+To verify if the LLM evaluator follows these examples, the user can rerun the evaluation and activate \systemText{Show Examples} in the Map Controls, which displays the functions in the example sets as square points among the newly extracted functions (Fig.~\ref{fig:system_alignment}C).
+Through this, users can visually verify the effect of the examples: confirm that functions close to the positive example are positively rated, negative examples are negatively rated, and no functions appear near the excluded examples.
+This workflow completes the \textit{Fragment-Level Rate} affordance by allowing users to directly refine how each function is evaluated.
+
+\begin{block}
+  Robin considers that functions related to wordplay should be evaluated by a separate criterion, rather than within the \criterion{Creativity and Uniqueness} criterion.
+  She adds functions from the \textit{``Creative Wordplay in Product Marketing''} cluster to the criterion's excluded example set.
+  After re-running the evaluation, Robin uses the \systemText{Show Examples} toggle to find that there are no points in the visualization near to these examples---indicating that the LLM evaluator is no longer considering wordplay for that criterion.
+\end{block}
+
+\subsection{Technical Pipeline}
+
+We designed an LLM-powered pipeline to extract, evaluate and cluster the fragment-level functions from outputs.
+
+\subsubsection{\Approach{}}
+
+We design an LLM prompt for \approach{} that, given an input-output pair and a set of evaluation criteria, returns fragment-level functions for each criterion alongside their ratings and evaluation justifications.
+The prompt also takes the example sets (i.e., positive, negative, excluded) created by users.
+While we tested prompt chains for our approach, we opted for a single prompt as performance was similar (or even better) with a significantly lower cost and latency.
+For \textit{each} criterion, our prompt instructs an LLM to:
+\begin{enumerate}
+    \item \textbf{Review aloud}: The LLM carefully reviews the whole output while noting down thoughts and observations. Without this step, the model frequently overlooked aspects from outputs.
+    \item \textbf{Extract all fragments}: Then, the LLM extracts all fragments that can be relevant to the criterion. Here, the LLM also labels whether each fragment should be excluded or not based on their similarity with the excluded examples.
+    \item \textbf{Analyze each fragment}: For each fragment, the LLM explains its analysis and evaluation of the fragment in terms of its relevance and importance with respects to the criterion.
+    \item \textbf{Abstract fragments into functions}: Based on the analysis for each fragment, the LLM then creates a concise label to describe the function played by the fragment. 
+    \item \textbf{Rate each function}: The LLM then rates each function as positive or negative depending on its alignment with the criterion. Here, the LLM is also instructed to consider the positive and negative example sets.
+    \item \textbf{Summarize into a holistic justification}: Finally, the LLM summarizes its evaluations and justifications for each function into a holistic evaluation justification for the output on that criterion.
+\end{enumerate}
+
+\subsubsection{Multi-Level Clustering}
+
+Inspired by prior work~\cite{tamkin2024clio, lam2024concept} on analyzing and summarizing large-scale text datasets with LLMs, we designed a hierarchical clustering pipeline to group similar fragment-level functions and facilitate sensemaking.
+The pipeline proceeds as follows:
+\begin{enumerate}
+    \item \textbf{Embed functions}: We use a text embedding model to convert function descriptions into embeddings, which are then projected into a 2D space using the UMAP algorithm~\cite{mcinnes2018umap}.
+    \item \textbf{Create base clusters}: We group functions into base clusters using the HDBSCAN algorithm~\cite{mcinnes2017hdbscan}, which can automatically identify the appropriate number of clusters and allows the pipeline to adapt to varying datasets sizes. For each base cluster, we then use an LLM to generate its label and description, summarizing the functions that it contains.
+    \item \textbf{Create super clusters}: We then group similar base clusters into super clusters by using the KMeans algorithm~\cite{lloyd1982kmeans, macqueen1967kmeans}. Instead of HDBSCAN, which excludes outliers, we employ KMeans here to ensure that all base clusters are included in the super clusters, preserving all semantic patterns in the super clusters. We then generate a label and description for each super cluster.
+    \item \textbf{Deduplicate super clusters}: Since KMeans partitions the embedding space into a fixed number of groups, a single broad theme may be fragmented into multiple super clusters. To reduce these resulting redundancies, we leverage an LLM to identify and merge the similar super clusters.
+    \item \textbf{Reassign to super clusters}: Embedding-based clustering can suffer from inaccuracies where semantically similar data are not grouped due to lexical differences, or distinct concepts are grouped solely due to embedding similarity. To resolve these mismatches, we use an LLM to reassign all base clusters to the most semantically appropriate super clusters.
+\end{enumerate}
+
+\subsection{Implementation Details}
+
+We implemented the front-end of \sysname{} using TypeScript, ReactJS, and CSS. 
+The Map Visualization was implemented with D3.js\footnote{\url{https://d3js.org/}} and we used \texttt{umap-js}\footnote{\url{https://github.com/PAIR-code/umap-js}} for the UMAP algorithm.
+The back-end was implemented as a Flask server, which also executes the KMeans and HDBSCAN algorithms through \texttt{scikit-learn}\footnote{\url{https://scikit-learn.org/}} and \texttt{hdbscan}\footnote{\url{https://pypi.org/project/hdbscan/}}, respectively.
+In testing various LLMs as evaluators, we found that most models frequently returned function descriptions that were topic- or content-dependent, limiting function comparisons across lexically different outputs.
+A notable exception was Claude 3.7 Sonnet~\cite{anthropic2025claude37}, which more consistently returned topic-agnostic, generalizable function descriptions.
+Thus, for functional fragmentation and evaluation, we used \texttt{claude-3-7-sonnet-20250219} through the Amazon Bedrock API\footnote{\url{https://aws.amazon.com/bedrock}}.
+We used \texttt{text-embedding-3-small} for text embeddings and \texttt{gpt-4o-mini-2024-07-18} for the clustering pipeline through the OpenAI API\footnote{\url{https://platform.openai.com/}}.
+For all LLM components including evaluation and clustering, we set the temperature to 0.1.
+Full LLM prompts in Appendix~\ref{appendix:prompts}.

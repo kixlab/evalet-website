@@ -18,15 +18,14 @@
 # You can create any custom variable you would like, and they will be accessible
 # in the templates via {{ site.myvariable }}.
 
-title: EvalLM
+title: Evalet
 theme: minima
-description: "Interactive Evaluation of Large Language Model Prompts on User-Defined Criteria"
+description: "Evaluating Large Language Models by Fragmenting Outputs into Functions"
 
 syscolor: "#555555"
 sysfont: Inter
-video: https://www.youtube-nocookie.com/embed/7hvTnhiCO7Y?si=6I9aqVnatM8VoaJd
-paper: https://arxiv.org/abs/2309.13633
-code: https://github.com/kixlab/evallm
+paper: https://arxiv.org/abs/2509.11206
+code: https://github.com/kixlab/evalet
 
 plugins:
   - jekyll-feed

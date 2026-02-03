@@ -1,0 +1,39 @@
+\section{Related Work}
+
+This work aims to support interactive evaluation of LLMs through sensemaking of model outputs and evaluations at scale.
+To this end, we review literature in (1) interactive examination of machine learning (ML) models, (2) interactive testing and evaluation of LLMs, and (3) sensemaking of text at scale.
+
+\subsection{Interactive Examination of Machine Learning}
+
+Traditionally, Machine Learning (ML) models are examined and understood by evaluating on benchmarks with automated metrics that aggregate performance into a single statistic or score.
+However, this provides limited understanding into how the model behaves, what its flaws are, and what are the areas for improvement~\cite{ribeiro2020beyond, zeng2025evaltree, murahari2023qualeval}.
+Instead of relying on aggregated metrics, prior work has introduced systems that support more interactive and fine-grained evaluation of models.
+For example, \textit{Polyjuice}~\cite{wu2021polyjuice} and \textit{AdaTest}~\cite{ribeiro2022adaptive} allow practitioners to iteratively evaluate models by creating challenging input data and testing how the models behave on these cases.
+Furthermore, researchers have proposed various tools~\cite{cabrera2023zeno, wexler2020whatif, wu2019errudite, robertson2023angler, sivaraman2025divisi} that help practitioners to unpack evaluations by identifying \textit{slices} or subsets of data, and testing models on these to identify specific flaws or limitations.
+Complementing these evaluation approaches, a rich body of work in explainable AI (XAI)~\cite{liao2021human} has also explored how to support understanding of models through more fine-grained analysis of behaviors~\cite{lai2022human}. 
+For instance, the foundational methods LIME~\cite{ribeiro2016should} and SHAP~\cite{lundberg2017unified} explain model predictions by inferring the effect of individual features.
+Frameworks such as the XAI Question Bank~\cite{liao2020questioning} organizes users' understanding and explainability needs into fine-grained questions that explore diverse aspects of models (e.g., inputs, outputs, performance).
+Collectively, this work highlights the importance and need for more granular analysis of model performance.
+Our work extends this to the evaluation of LLMs: instead of simply slicing datasets, we slice the data points themselves into fragment-level functions to provide a more fine-grained understanding of LLM outputs.
+
+\subsection{Interactive Testing and Evaluation of LLMs}
+
+The general-purpose capabilities of LLMs have enabled novel AI applications but also made it harder to verify that they behave as intended.
+As these models are applied to new tasks and contexts, there are no benchmarks or metrics to automate evaluation~\cite{kim2024evallm} and, due to their near infinite input-output space, models have to be tested with numerous and diverse samples~\cite{zamfirescu2023herding, liu2023what}.
+To help practitioners, researchers have proposed novel tools that support interactive testing and experimentation on these models by decomposing tasks into chains of sub-tasks~\cite{wu2022aichains}, composing diverse LLM pipelines in parallel~\cite{arawjo2024chainforge, zhang2024chainbuddy}, or creating diverse variations of test inputs~\cite{strobelt2023promptide, wu2023scattershot, mishra2023promptaid, kim2023cells}.
+More recently, the success of \textit{LLM-as-a-Judge}~\cite{zheng2023judging} (i.e., LLMs evaluating other LLMs) has led to several systems~\cite{kim2024evallm, kahng2024llm, ashktorab2024aligning, shankar2024validates} that employ LLM-based evaluators to support interactive evaluation on diverse criteria---offering a multi-dimensional view of model performance.
+However, as these only provide holistic scores and overall justifications, practitioners must manually review the outputs and justifications to identify specific strengths and weaknesses, and validate the evaluations~\cite{kim2024evallm, gebreegziabher2025metricmate}---requiring effort that is impractical at scale.
+To address the limitations of holistic scoring, prior work has proposed more fine-grained evaluation methods. 
+For example, Nenkova and Passonneau~\cite{nenkova2004evaluating} and FactScore~\cite{min2023factscore} decompose text into units, which are then assessed individually, while Scarecrow~\cite{dou2021gpt} and BooookScore ~\cite{chang2023booookscore} assess outputs by annotating spans on predefined error categories~\cite{dou2021gpt, chang2023booookscore}.
+Building on this, our approach employs LLMs to decompose outputs into fragments, annotate their function in an emergent manner, and cluster these across outputs---surfacing common strengths and weaknesses, and facilitating verification of evaluation consistency.
+
+\subsection{Sensemaking of Text at Scale}
+
+Theories on sensemaking posit that people make sense of large information spaces through multiple cognitive processes such as iteratively foraging and organizing information---\textit{the notional model}~\cite{pirolli2005sensemaking}---and comparing information to identify patterns---\textit{structure-mapping theory}~\cite{gentner1983structure}.
+Given their significant cognitive demands, prior work has proposed systems that support these processes for textual data: facilitating structuring and organization of collected information~\cite{palani2022interweave, rachatasumrit2021forsense}, generating summaries or topic models~\cite{lam2024concept, yatani2011review, palani2021conotate, glassman2015overcode}, and visualizing corpora using spatial embeddings or structural patterns~\cite{kim2016topiclens, wang2023wizmap, gu2025abstractexplorer}.
+Recent work extends these ideas to sensemaking over LLM outputs~\cite{suh2023sensecape, jiang2023graphologue}.
+For example, \textit{Luminate}~\cite{suh2024luminate} guides LLMs to generate outputs along key dimensions and then visualizes the outputs on these dimensions, helping writers explore the generation space.
+Gero et al.~\cite{gero2024supporting} explored various designs and algorithms (e.g., unique words, exact matches) to support comparison of LLM outputs and help users form mental models of LLM behavior.
+Most similar to our work, \textit{Policy Projector}~\cite{lam2024ai} \textit{``maps''} LLM input-output pairs into a 2D space to help users explore common groups of outputs, classify these groups, and define policies on the model's behaviors using these classified groups.
+Building on these approaches, we propose a novel approach for \textit{multi-dimensional} and \textit{granular} sensemaking of LLM outputs. 
+Instead of visualizing entire outputs, we extract fragment-level functions from multiple outputs for each criterion and then visualize the space of functions for each criterion---supporting exploration of fine-grained model behaviors within dimensions of interest.

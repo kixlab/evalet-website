@@ -1,0 +1,58 @@
+\section{Functional Fragmentation: An Evaluation Approach}
+
+To evaluate the alignment of an LLM, practitioners must not only quantify quality through numeric scores but also qualitatively understand how this models' outputs are composed and their characteristics~\cite{ribeiro2020beyond, dunlap2024vibecheck, gero2024supporting}.
+While existing LLM-based evaluation methods can assess outputs across various criteria~\cite{zheng2023judging, kim2024evallm, ye2023flask}, they only provide holistic judgments (i.e., overall scores, justification) for each dimension.
+Thus, practitioners must manually inspect outputs to identify the specific elements that satisfy or violate their goals.
+
+To address this, we introduce \approach{}, an LLM-based evaluation method that \emph{decomposes} model outputs into criterion-relevant \emph{fragments} and then infers each fragment’s \emph{function}---i.e., the role or effect it serves that influences the output's fulfillment of that criterion. 
+Our approach draws inspiration from inductive coding~\cite{thomas2006general} (i.e., interpreting raw data into codes based on higher-level themes) and rubric design~\cite{perlman2003performance} (i.e., inspecting artifacts to define quality aspects to review).
+In this section, we outline the novel affordances that are supported by this approach for \textbf{inspecting}, \textbf{rating}, and \textbf{comparison} of LLM outputs.
+
+% ------------------------------------------
+
+\subsection{Inspect}
+\label{framework:inspect}
+
+\paragraph{Fragment-Level}
+To make sense of existing LLM-based evaluations, practitioners must manually review outputs, connect them with the evaluator's justifications, and interpret each fragment's significance in terms of the criteria~\cite{kim2024evallm}.
+Our approach automatically extracts criteria-relevant fragments and interprets their functions with respect to each criterion---directly presenting practitioners with qualitative interpretations to inspect and verify.
+As one fragment can serve different functions under different criteria, our approach allows practitioners to examine the same content from multiple perspectives and identify trade-offs.
+Given that criteria are often subjective, our approach can also uncover meaningful functions that the practitioner may have not previously considered---similar to \textit{inductive coding}~\cite{thomas2006general}.
+Conversely, if the LLM evaluator extracts functions that the practitioner considers irrelevant to the criterion, practitioners can directly flag these to be ignored in future evaluations.
+
+\paragraph{Output-Level}
+Beyond identifying each fragment-level function in an output, practitioners may also need to inspect how these functions appear together in the output.
+For example, when evaluating \criterion{Tension} in LLM-generated horror stories, a practitioner may need to understand how the LLM uses various functions to gradually build tension in the story.
+Traditionally, this would require the practitioner to read the whole story, but not all of the content may be directly related to that criterion.
+With \approach{}, each output can be summarized into a list of functions related to a given criterion, allowing practitioners to easily inspect each output by focusing only on the aspects of interest.
+
+% ------------------------------------------
+
+\subsection{Rate}
+\label{framework:rate}
+
+\paragraph{Fragment-Level}
+By disentangling outputs into fragment-level functions, each individual function's alignment with a criterion can be rated independently. 
+More fine-grained evaluations can support interpretability by clearly highlighting the specific aspects of an output that are aligned or misaligned with a criterion.
+Instead of correcting the LLM evaluator by editing criteria descriptions, practitioners can directly re-rate specific functions to control future evaluations---similar to how educators develop rubrics by assessing examples of student work~\cite{perlman2003performance}. 
+Beyond supporting practitioners, LLM evaluators are also more consistent when performing more fine-grained evaluations through checklists~\cite{saad2024lmunit, lin2024wildbench} or rubrics~\cite{kim2023prometheus, ye2023flask, kim2024biggen}.
+Unlike these approaches, which rely on predefining these checklists and rubrics, our fragment-level functions are \textit{emergent}, identified dynamically based on the outputs and criteria.
+
+\paragraph{Output-Level}
+Instead of providing uninterpretable and opaque scores (e.g., 2 out of 5) for each model output, our approach enables us to rate each output based on its proportion of aligned and misaligned fragment-level functions (e.g., 75\% of surfaced functions are aligned)\footnote{For simplicity, we opt for equal weighting of each function. As discussed in Limitations, future work can explore automatic or manual approaches for weighting the significance of each function.}.
+This provides a more interpretable signal of \textit{how much} misalignment there is in an output and why---allowing practitioners to understand what are the specific errors that need to be corrected~\cite{ribeiro2020beyond}.
+
+% ------------------------------------------
+
+\subsection{Compare}
+\label{framework:compare}
+
+\paragraph{Fragment-Level}
+Comparing fragments across outputs can reveal common model behaviors, but directly comparing raw text is difficult because fragments may differ lexically or semantically even when they serve the similar function.
+For example, when we evaluate an essay-writing LLM on \criterion{Logical Coherence}, these two sentences serve the same function as cohesive devices for a conclusion despite their wording differences: \textit{``In conclusion, the trend is clear.''}, and \textit{``To sum up, it supports our view.''}
+By labeling each fragment's functions, our approach allows for comparison and grouping of fragments not based on their lexical similarity, but by their functional similarity---allowing practitioners to distill high-level insights and patterns.
+
+\paragraph{Output-Level}
+By considering each output as a list of its fragment-level functions, we can also compare outputs based on whether they share a function or set of functions.
+For example, practitioners could group and filter outputs based on the inclusion of a specific function of interest and even calculate the distribution of outputs that contain certain function patterns---supporting the common practice of slicing data into subsets of interest in ML evaluation~\cite{cabrera2023zeno, wu2019errudite, sivaraman2025divisi}.
+Beyond comparing outputs from a single LLM, practitioners could qualitatively compare the behaviors of different LLMs by comparing the distributions of specific functions in each model's outputs.

@@ -1,0 +1,59 @@
+\begin{figure*}
+\begin{framed}
+\begin{flushleft}
+\noindent
+\textbf{Create Super Clusters} \\
+
+\medskip
+\hrule
+\bigskip
+
+\textbf{System Prompt}
+
+\begin{Verbatim}[breaklines, fontsize=\fontsize{5}{6}\selectfont]
+You are tasked with creating higher level cluster names based on a given list of clusters and their descriptions.
+Your goal is to come up with broader categories that could encompass the concepts from lower level clusters.
+  
+## Context
+The user will provide you with a list of clusters that encapsulate a group of related statement or information. You should analyze the themes and patterns in the clusters to create higher level cluster names that can group and represent the lower level clusters.
+  
+## Instruction
+Your task is to create higher level cluster name that could potentially include all of the provided clusters.
+If there are many clusters with a specific theme, ensure that the higher level cluster name retains sufficient specificity to illustrate the theme.
+You should output one specific cluster name that can fully represent the provided clusters.
+  
+  1. Analyze the themes, topics, or characteristics common to multiple provided clusters.
+  2. Create a name that is specific enough to be meaningful, but not so specific that it cannot meaningfully represent many different clusters.
+  3. Ensure that the higher level cluster names are distinct from one another.
+  4. Use clear, concise, and descriptive language for the cluster name.
+  5. Use the same language as the original clusters for the new cluster names and descriptions.
+  6. Provide concise description for each cluster in one sentence.
+  
+## Response Format (in JSON)
+```json
+{
+  "description": <concise description for the higher level cluster>,
+  "name": <clear and concise name for higher level cluster idea>
+}
+```
+\end{Verbatim}
+
+\hrule
+\bigskip
+
+\textbf{User Prompt}
+
+\begin{Verbatim}[breaklines, fontsize=\fontsize{5}{6}\selectfont]
+### Clusters
+
+- {cluster name}: {cluster description}
+- {cluster name}: {cluster description}
+...
+\end{Verbatim}
+
+\end{flushleft}
+\end{framed}
+\caption{Prompt to create super cluster labels for groups of base clusters.} 
+\label{fig:super_cluster_prompt}
+\end{figure*}
+

@@ -1,0 +1,66 @@
+\begin{figure*}
+\begin{framed}
+\begin{flushleft}
+\noindent
+\textbf{Deduplicate Super Clusters} \\
+
+\medskip
+\hrule
+\bigskip
+
+\textbf{System Prompt}
+
+\begin{Verbatim}[breaklines, fontsize=\fontsize{5}{6}\selectfont]
+You are tasked with deduplicating a list of cluster names and descriptions into a smaller set of distinct clusters.
+Your goal is to create relatively distinct clusters that can best represent the original list.
+
+## Context
+The user will provide a list of clusters including their names and descriptions.
+This cluster list will be used to categorize diverse data points.
+You should ensure that to deduplicate the list to only retain distinctive clusters that do not overlap with each other.
+
+## Instruction
+  1. Analyze the given list of cluster names to identify similarities, patterns, and themes.
+  2. Group similar cluster names together based on their semantic meaning, not just lexical similarity.
+  3. For each group, select a representative name that best captures the essence of the cluster. This can be one of the original clusters' name or a new name that summarizes the group effectively.
+  4. Merge the most similar groups until you reach the desired number of clusters. Maintain as much specificity as possible while merging.
+  5. You should write a representative description for the new cluster. Maintain the specificity of original clusters' description.
+  6. Ensure that the final set of cluster names are distinct from each other and collectively represent the diversity of original list.
+  7. Avoid significantly reducing the original list. The user will provide a target length for the new list.
+  8. You do not have to modify or re-create all of the cluster. You should **modify them only when you feel it is necessary**. If not, you can just leave the cluster as is.
+  9. Ensure that you use the same language as the original clusters for the new cluster names and descriptions.
+
+## Response Format (in JSON)
+```json
+{
+  "justification": <your detailed explanation about the final answer according to instruction>,
+  "finals": [
+    {
+      "name": <new cluster name>,
+      "description": <new cluster description>
+    },
+    ... <new clusters> ...
+  ]
+}
+```
+\end{Verbatim}
+
+\hrule
+\bigskip
+
+\textbf{User Prompt}
+
+\begin{Verbatim}[breaklines, fontsize=\fontsize{5}{6}\selectfont]
+### Clusters
+
+- {cluster name}: {cluster description}
+- {cluster name}: {cluster description}
+...
+\end{Verbatim}
+
+\end{flushleft}
+\end{framed}
+\caption{Prompt to deduplicate similar super clusters.} 
+\label{fig:super_cluster_deduplication_prompt}
+\end{figure*}
+
