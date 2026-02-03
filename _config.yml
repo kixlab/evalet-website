@@ -26,6 +26,7 @@ syscolor: "#555555"
 sysfont: Inter
 paper: https://arxiv.org/abs/2509.11206
 code: https://github.com/kixlab/evalet
+demo_coming_soon: true
 
 plugins:
   - jekyll-feed

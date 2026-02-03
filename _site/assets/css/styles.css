@@ -909,22 +909,13 @@ lottie-player {
   gap: 8px;
   padding: 8px 16px;
   border-radius: 100px;
-  background-color: #787878;
+  background-color: #999;
   color: #fff;
   fill: #fff;
   font-size: 16px;
-  width: 120px;
+  width: auto;
   cursor: default;
-}
-.button-disabled:visited {
-  color: #fff;
-}
-.button-disabled:active {
-  color: #fff;
-}
-.button-disabled:hover {
-  text-decoration: none;
-  color: #fff;
+  pointer-events: none;
 }
 
 .sys-name {
