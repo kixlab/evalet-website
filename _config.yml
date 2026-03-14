@@ -28,7 +28,8 @@ paper: https://arxiv.org/abs/2509.11206
 code: https://github.com/kixlab/evalet
 demo_coming_soon: true
 venue: "CHI 2026"
-venue_message: "Conditionally Accepted to"
+venue_message: "To be Presented at"
+award: "Honorable Mention Award"
 
 plugins:
   - jekyll-feed

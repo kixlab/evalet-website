@@ -239,6 +239,23 @@ lottie-player {
   font-weight: normal;
 }
 
+.award-badge-container {
+  text-align: center;
+  margin-top: 10px;
+  margin-bottom: 0;
+}
+
+.award-badge {
+  font-size: 15px;
+  font-weight: 600;
+  color: #b8860b;
+  background-color: #fffbea;
+  border: 1px solid #f0d060;
+  border-radius: 20px;
+  display: inline-block;
+  padding: 4px 14px;
+}
+
 .venue {
   text-align: center;
   font-size: 18px;
