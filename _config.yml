@@ -26,7 +26,6 @@ syscolor: "#555555"
 sysfont: Inter
 paper: https://arxiv.org/abs/2509.11206
 code: https://github.com/kixlab/evalet
-demo_coming_soon: true
 venue: "CHI 2026"
 venue_message: "To be Presented at"
 award: "Honorable Mention Award"
